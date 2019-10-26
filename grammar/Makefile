@@ -2,35 +2,35 @@ CC = gcc
 CCFLAGS = -g -W -Wall
 
 FLEX = flex
-FLEX_OPTS = -Pcalc
+FLEX_OPTS = -Pdfng
 
 BISON = bison
-BISON_OPTS = -t -pcalc
+BISON_OPTS = -t -pdfng
 
 OBJS = Absyn.o Lexer.o Parser.o Printer.o
 
 .PHONY : clean distclean
 
-all : Testcalc
+all : Testdfng
 
 clean :
-	rm -f *.o Testcalc calc.aux calc.log calc.pdf calc.dvi calc.ps calc
+	rm -f *.o Testdfng dfng.aux dfng.log dfng.pdf dfng.dvi dfng.ps dfng
 
 distclean : clean
-	rm -f Absyn.h Absyn.c Test.c Parser.c Parser.h Lexer.c Skeleton.c Skeleton.h Printer.c Printer.h Makefile calc.l calc.y calc.tex
+	rm -f Absyn.h Absyn.c Test.c Parser.c Parser.h Lexer.c Skeleton.c Skeleton.h Printer.c Printer.h Makefile dfng.l dfng.y dfng.tex
 
-Testcalc : ${OBJS} Test.o
-	@echo "Linking Testcalc..."
-	${CC} ${CCFLAGS} ${OBJS} Test.o -o Testcalc
+Testdfng : ${OBJS} Test.o
+	@echo "Linking Testdfng..."
+	${CC} ${CCFLAGS} ${OBJS} Test.o -o Testdfng
 
 Absyn.o : Absyn.c Absyn.h
 	${CC} ${CCFLAGS} -c Absyn.c
 
-Lexer.c : calc.l
-	${FLEX} ${FLEX_OPTS} -oLexer.c calc.l
+Lexer.c : dfng.l
+	${FLEX} ${FLEX_OPTS} -oLexer.c dfng.l
 
-Parser.c : calc.y
-	${BISON} ${BISON_OPTS} calc.y -o Parser.c
+Parser.c : dfng.y
+	${BISON} ${BISON_OPTS} dfng.y -o Parser.c
 
 Lexer.o : Lexer.c Parser.h
 	${CC} ${CCFLAGS} -c Lexer.c

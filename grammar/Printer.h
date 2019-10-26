@@ -17,14 +17,56 @@ void indent(void);
 void backup(void);
 
 
+char *printProgram(Program p);
+char *printFunction(Function p);
+char *printDecl(Decl p);
+char *printListFunction(ListFunction p);
+char *printListStm(ListStm p);
+char *printListDecl(ListDecl p);
+char *printListIdent(ListIdent p);
+char *printStm(Stm p);
 char *printExp(Exp p);
+char *printListExp(ListExp p);
+char *printType(Type p);
 
+void ppProgram(Program p, int i);
+void ppFunction(Function p, int i);
+void ppDecl(Decl p, int i);
+void ppListFunction(ListFunction p, int i);
+void ppListStm(ListStm p, int i);
+void ppListDecl(ListDecl p, int i);
+void ppListIdent(ListIdent p, int i);
+void ppStm(Stm p, int i);
 void ppExp(Exp p, int i);
+void ppListExp(ListExp p, int i);
+void ppType(Type p, int i);
 
+char *showProgram(Program p);
+char *showFunction(Function p);
+char *showDecl(Decl p);
+char *showListFunction(ListFunction p);
+char *showListStm(ListStm p);
+char *showListDecl(ListDecl p);
+char *showListIdent(ListIdent p);
+char *showStm(Stm p);
 char *showExp(Exp p);
+char *showListExp(ListExp p);
+char *showType(Type p);
 
+void shProgram(Program p);
+void shFunction(Function p);
+void shDecl(Decl p);
+void shListFunction(ListFunction p);
+void shListStm(ListStm p);
+void shListDecl(ListDecl p);
+void shListIdent(ListIdent p);
+void shStm(Stm p);
 void shExp(Exp p);
+void shListExp(ListExp p);
+void shType(Type p);
 
+void ppIdent(String s, int i);
+void shIdent(String s);
 void ppInteger(Integer n, int i);
 void ppDouble(Double d, int i);
 void ppChar(Char c, int i);

@@ -24,7 +24,7 @@ void usage(void) {
 int main(int argc, char ** argv)
 {
   FILE *input;
-  Exp parse_tree;
+  Program parse_tree;
   int quiet = 0;
   char *filename = NULL;
 
@@ -50,15 +50,15 @@ int main(int argc, char ** argv)
   }
   else input = stdin;
   /* The default entry point is used. For other options see Parser.h */
-  parse_tree = pExp(input);
+  parse_tree = pProgram(input);
   if (parse_tree)
   {
     printf("\nParse Successful!\n");
     if (!quiet) {
       printf("\n[Abstract Syntax]\n");
-      printf("%s\n\n", showExp(parse_tree));
+      printf("%s\n\n", showProgram(parse_tree));
       printf("[Linearized Tree]\n");
-      printf("%s\n\n", printExp(parse_tree));
+      printf("%s\n\n", printProgram(parse_tree));
     }
     return 0;
   }

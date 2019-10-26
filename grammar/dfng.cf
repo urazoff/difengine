@@ -1,0 +1,60 @@
+-- Difengine--, Reduced C grammar yet.
+
+comment "//" ;
+comment "/*" "*/" ;
+
+Prog. Program ::= [Function] ;
+
+Fun.  Function ::= Type Ident "(" [Decl] ")" "{" [Stm] "}" ;
+
+Dec.  Decl ::= Type [Ident] ;
+
+terminator Function "" ;
+terminator Stm "" ;
+separator Decl "," ;
+separator nonempty Ident "," ;
+
+SDecl.   Stm ::= Decl ";"  ;
+SDecls.  Stm ::= Decl "," [Ident] ";";
+SInit.   Stm ::= Decl "=" Exp ";";
+SExp.    Stm ::= Exp ";" ;
+SBlock.  Stm ::= "{" [Stm] "}" ;
+SWhile.  Stm ::= "while" "(" Exp ")" Stm ;
+SReturn. Stm ::= "return" Exp  ";" ;
+SIfElse. Stm ::= "if" "("Exp")" Stm "else" Stm;
+
+EInt. Exp15 ::= Integer ;
+EDouble. Exp15 ::= Double ; 
+ETrue. Exp15 ::= "true" ; 
+EFalse. Exp15 ::= "false" ; 
+EIdent. Exp15 ::= Ident;
+
+EApp.    Exp15  ::= Ident "(" [Exp] ")" ;
+EPIncr.  Exp14  ::= Exp15 "++" ;
+EPDecr.  Exp14  ::= Exp15 "--" ;
+EIncr.   Exp13  ::= "++" Exp14 ;
+EDecr.   Exp13  ::= "--" Exp14 ;
+ETimes.  Exp12  ::= Exp12 "*"  Exp13 ;
+EDiv.    Exp12  ::= Exp12 "/"  Exp13 ;
+EPlus.   Exp11  ::= Exp11 "+"  Exp12 ;
+EMinus.  Exp11  ::= Exp11 "-"  Exp12 ;
+ELt.     Exp9   ::= Exp9  "<"  Exp10 ;
+EGt.     Exp9   ::= Exp9  ">"  Exp10 ;
+ELtEq.   Exp9   ::= Exp9  "<=" Exp10 ;
+EGtWq.   Exp9   ::= Exp9  ">=" Exp10 ;
+EEq.     Exp8   ::= Exp8  "==" Exp9 ;
+ENEq.    Exp8   ::= Exp8  "!=" Exp9 ;
+EAnd.    Exp4   ::= Exp4  "&&" Exp5 ;
+EOr.     Exp3   ::= Exp3  "||" Exp4 ;
+EAss.    Exp2   ::= Exp3  "=" Exp2 ;
+
+coercions Exp 15;
+
+separator Exp "," ;
+
+Tbool.   Type ::= "bool" ;
+Tdouble. Type ::= "double" ;
+Tint.    Type ::= "int" ;
+Tvoid.   Type ::= "void" ;
+
+token Ident (letter (letter | digit | '_')*) ;

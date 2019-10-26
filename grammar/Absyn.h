@@ -9,35 +9,201 @@ typedef char Char;
 typedef double Double;
 typedef char* String;
 typedef char* Ident;
+typedef char* Ident;
 
 
 /********************   Forward Declarations    ********************/
 
+struct ListFunction_;
+typedef struct ListFunction_ *ListFunction;
+struct ListStm_;
+typedef struct ListStm_ *ListStm;
+struct ListDecl_;
+typedef struct ListDecl_ *ListDecl;
+struct ListIdent_;
+typedef struct ListIdent_ *ListIdent;
+struct ListExp_;
+typedef struct ListExp_ *ListExp;
+struct Program_;
+typedef struct Program_ *Program;
+struct Function_;
+typedef struct Function_ *Function;
+struct Decl_;
+typedef struct Decl_ *Decl;
+struct Stm_;
+typedef struct Stm_ *Stm;
 struct Exp_;
 typedef struct Exp_ *Exp;
+struct Type_;
+typedef struct Type_ *Type;
 
 
 /********************   Abstract Syntax Classes    ********************/
 
-struct Exp_
+struct Program_
 {
 
-  enum { is_EAdd, is_ESub, is_EMul, is_EDiv, is_EInt } kind;
+  enum { is_Prog } kind;
   union
   {
-    struct { Exp exp_1, exp_2; } eadd_;
-    struct { Exp exp_1, exp_2; } esub_;
-    struct { Exp exp_1, exp_2; } emul_;
-    struct { Exp exp_1, exp_2; } ediv_;
-    struct { Integer integer_; } eint_;
+    struct { ListFunction listfunction_; } prog_;
   } u;
 };
 
-Exp make_EAdd(Exp p0, Exp p1);
-Exp make_ESub(Exp p0, Exp p1);
-Exp make_EMul(Exp p0, Exp p1);
-Exp make_EDiv(Exp p0, Exp p1);
+Program make_Prog(ListFunction p0);
+
+struct Function_
+{
+
+  enum { is_Fun } kind;
+  union
+  {
+    struct { Ident ident_; ListDecl listdecl_; ListStm liststm_; Type type_; } fun_;
+  } u;
+};
+
+Function make_Fun(Type p0, Ident p1, ListDecl p2, ListStm p3);
+
+struct Decl_
+{
+
+  enum { is_Dec } kind;
+  union
+  {
+    struct { ListIdent listident_; Type type_; } dec_;
+  } u;
+};
+
+Decl make_Dec(Type p0, ListIdent p1);
+
+struct ListFunction_
+{
+  Function function_;
+  ListFunction listfunction_;
+};
+
+ListFunction make_ListFunction(Function p1, ListFunction p2);
+struct ListStm_
+{
+  Stm stm_;
+  ListStm liststm_;
+};
+
+ListStm make_ListStm(Stm p1, ListStm p2);
+struct ListDecl_
+{
+  Decl decl_;
+  ListDecl listdecl_;
+};
+
+ListDecl make_ListDecl(Decl p1, ListDecl p2);
+struct ListIdent_
+{
+  Ident ident_;
+  ListIdent listident_;
+};
+
+ListIdent make_ListIdent(Ident p1, ListIdent p2);
+struct Stm_
+{
+
+  enum { is_SDecl, is_SDecls, is_SInit, is_SExp, is_SBlock, is_SWhile, is_SReturn, is_SIfElse } kind;
+  union
+  {
+    struct { Decl decl_; } sdecl_;
+    struct { Decl decl_; ListIdent listident_; } sdecls_;
+    struct { Decl decl_; Exp exp_; } sinit_;
+    struct { Exp exp_; } sexp_;
+    struct { ListStm liststm_; } sblock_;
+    struct { Exp exp_; Stm stm_; } swhile_;
+    struct { Exp exp_; } sreturn_;
+    struct { Exp exp_; Stm stm_1, stm_2; } sifelse_;
+  } u;
+};
+
+Stm make_SDecl(Decl p0);
+Stm make_SDecls(Decl p0, ListIdent p1);
+Stm make_SInit(Decl p0, Exp p1);
+Stm make_SExp(Exp p0);
+Stm make_SBlock(ListStm p0);
+Stm make_SWhile(Exp p0, Stm p1);
+Stm make_SReturn(Exp p0);
+Stm make_SIfElse(Exp p0, Stm p1, Stm p2);
+
+struct Exp_
+{
+
+  enum { is_EInt, is_EDouble, is_ETrue, is_EFalse, is_EIdent, is_EApp, is_EPIncr, is_EPDecr, is_EIncr, is_EDecr, is_ETimes, is_EDiv, is_EPlus, is_EMinus, is_ELt, is_EGt, is_ELtEq, is_EGtWq, is_EEq, is_ENEq, is_EAnd, is_EOr, is_EAss } kind;
+  union
+  {
+    struct { Integer integer_; } eint_;
+    struct { Double double_; } edouble_;
+    struct { Ident ident_; } eident_;
+    struct { Ident ident_; ListExp listexp_; } eapp_;
+    struct { Exp exp_; } epincr_;
+    struct { Exp exp_; } epdecr_;
+    struct { Exp exp_; } eincr_;
+    struct { Exp exp_; } edecr_;
+    struct { Exp exp_1, exp_2; } etimes_;
+    struct { Exp exp_1, exp_2; } ediv_;
+    struct { Exp exp_1, exp_2; } eplus_;
+    struct { Exp exp_1, exp_2; } eminus_;
+    struct { Exp exp_1, exp_2; } elt_;
+    struct { Exp exp_1, exp_2; } egt_;
+    struct { Exp exp_1, exp_2; } elteq_;
+    struct { Exp exp_1, exp_2; } egtwq_;
+    struct { Exp exp_1, exp_2; } eeq_;
+    struct { Exp exp_1, exp_2; } eneq_;
+    struct { Exp exp_1, exp_2; } eand_;
+    struct { Exp exp_1, exp_2; } eor_;
+    struct { Exp exp_1, exp_2; } eass_;
+  } u;
+};
+
 Exp make_EInt(Integer p0);
+Exp make_EDouble(Double p0);
+Exp make_ETrue(void);
+Exp make_EFalse(void);
+Exp make_EIdent(Ident p0);
+Exp make_EApp(Ident p0, ListExp p1);
+Exp make_EPIncr(Exp p0);
+Exp make_EPDecr(Exp p0);
+Exp make_EIncr(Exp p0);
+Exp make_EDecr(Exp p0);
+Exp make_ETimes(Exp p0, Exp p1);
+Exp make_EDiv(Exp p0, Exp p1);
+Exp make_EPlus(Exp p0, Exp p1);
+Exp make_EMinus(Exp p0, Exp p1);
+Exp make_ELt(Exp p0, Exp p1);
+Exp make_EGt(Exp p0, Exp p1);
+Exp make_ELtEq(Exp p0, Exp p1);
+Exp make_EGtWq(Exp p0, Exp p1);
+Exp make_EEq(Exp p0, Exp p1);
+Exp make_ENEq(Exp p0, Exp p1);
+Exp make_EAnd(Exp p0, Exp p1);
+Exp make_EOr(Exp p0, Exp p1);
+Exp make_EAss(Exp p0, Exp p1);
+
+struct ListExp_
+{
+  Exp exp_;
+  ListExp listexp_;
+};
+
+ListExp make_ListExp(Exp p1, ListExp p2);
+struct Type_
+{
+
+  enum { is_Tbool, is_Tdouble, is_Tint, is_Tvoid } kind;
+  union
+  {
+  } u;
+};
+
+Type make_Tbool(void);
+Type make_Tdouble(void);
+Type make_Tint(void);
+Type make_Tvoid(void);
 
 
 
