@@ -14,20 +14,28 @@ typedef char* Ident;
 
 /********************   Forward Declarations    ********************/
 
+struct ListExternal_declaration_;
+typedef struct ListExternal_declaration_ *ListExternal_declaration;
 struct ListFunction_;
 typedef struct ListFunction_ *ListFunction;
 struct ListStm_;
 typedef struct ListStm_ *ListStm;
 struct ListDecl_;
 typedef struct ListDecl_ *ListDecl;
+struct ListArg_;
+typedef struct ListArg_ *ListArg;
 struct ListIdent_;
 typedef struct ListIdent_ *ListIdent;
 struct ListExp_;
 typedef struct ListExp_ *ListExp;
 struct Program_;
 typedef struct Program_ *Program;
+struct External_declaration_;
+typedef struct External_declaration_ *External_declaration;
 struct Function_;
 typedef struct Function_ *Function;
+struct Arg_;
+typedef struct Arg_ *Arg;
 struct Decl_;
 typedef struct Decl_ *Decl;
 struct Stm_;
@@ -46,11 +54,32 @@ struct Program_
   enum { is_Prog } kind;
   union
   {
-    struct { ListFunction listfunction_; } prog_;
+    struct { ListExternal_declaration listexternal_declaration_; } prog_;
   } u;
 };
 
-Program make_Prog(ListFunction p0);
+Program make_Prog(ListExternal_declaration p0);
+
+struct ListExternal_declaration_
+{
+  External_declaration external_declaration_;
+  ListExternal_declaration listexternal_declaration_;
+};
+
+ListExternal_declaration make_ListExternal_declaration(External_declaration p1, ListExternal_declaration p2);
+struct External_declaration_
+{
+
+  enum { is_Afunc, is_Global } kind;
+  union
+  {
+    struct { Function function_; } afunc_;
+    struct { Stm stm_; } global_;
+  } u;
+};
+
+External_declaration make_Afunc(Function p0);
+External_declaration make_Global(Stm p0);
 
 struct Function_
 {
@@ -58,11 +87,25 @@ struct Function_
   enum { is_Fun } kind;
   union
   {
-    struct { Ident ident_; ListDecl listdecl_; ListStm liststm_; Type type_; } fun_;
+    struct { Ident ident_; ListArg listarg_; ListStm liststm_; Type type_; } fun_;
   } u;
 };
 
-Function make_Fun(Type p0, Ident p1, ListDecl p2, ListStm p3);
+Function make_Fun(Type p0, Ident p1, ListArg p2, ListStm p3);
+
+struct Arg_
+{
+
+  enum { is_ADecl, is_APred } kind;
+  union
+  {
+    struct { Ident ident_; Type type_; } adecl_;
+    struct { Exp exp_; Ident ident_; Type type_; } apred_;
+  } u;
+};
+
+Arg make_ADecl(Type p0, Ident p1);
+Arg make_APred(Type p0, Ident p1, Exp p2);
 
 struct Decl_
 {
@@ -97,6 +140,13 @@ struct ListDecl_
 };
 
 ListDecl make_ListDecl(Decl p1, ListDecl p2);
+struct ListArg_
+{
+  Arg arg_;
+  ListArg listarg_;
+};
+
+ListArg make_ListArg(Arg p1, ListArg p2);
 struct ListIdent_
 {
   Ident ident_;

@@ -6,7 +6,7 @@
 
 
 /********************   Prog    ********************/
-Program make_Prog(ListFunction p1)
+Program make_Prog(ListExternal_declaration p1)
 {
     Program tmp = (Program) malloc(sizeof(*tmp));
     if (!tmp)
@@ -15,10 +15,47 @@ Program make_Prog(ListFunction p1)
         exit(1);
     }
     tmp->kind = is_Prog;
-    tmp->u.prog_.listfunction_ = p1;
+    tmp->u.prog_.listexternal_declaration_ = p1;
+    return tmp;
+}/********************   ListExternal_declaration    ********************/
+ListExternal_declaration make_ListExternal_declaration(External_declaration p1, ListExternal_declaration p2)
+{
+    ListExternal_declaration tmp = (ListExternal_declaration) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating ListExternal_declaration!\n");
+        exit(1);
+    }
+    tmp->external_declaration_ = p1;
+    tmp->listexternal_declaration_ = p2;
+    return tmp;
+}/********************   Afunc    ********************/
+External_declaration make_Afunc(Function p1)
+{
+    External_declaration tmp = (External_declaration) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating Afunc!\n");
+        exit(1);
+    }
+    tmp->kind = is_Afunc;
+    tmp->u.afunc_.function_ = p1;
+    return tmp;
+}
+/********************   Global    ********************/
+External_declaration make_Global(Stm p1)
+{
+    External_declaration tmp = (External_declaration) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating Global!\n");
+        exit(1);
+    }
+    tmp->kind = is_Global;
+    tmp->u.global_.stm_ = p1;
     return tmp;
 }/********************   Fun    ********************/
-Function make_Fun(Type p1, Ident p2, ListDecl p3, ListStm p4)
+Function make_Fun(Type p1, Ident p2, ListArg p3, ListStm p4)
 {
     Function tmp = (Function) malloc(sizeof(*tmp));
     if (!tmp)
@@ -29,8 +66,36 @@ Function make_Fun(Type p1, Ident p2, ListDecl p3, ListStm p4)
     tmp->kind = is_Fun;
     tmp->u.fun_.type_ = p1;
     tmp->u.fun_.ident_ = p2;
-    tmp->u.fun_.listdecl_ = p3;
+    tmp->u.fun_.listarg_ = p3;
     tmp->u.fun_.liststm_ = p4;
+    return tmp;
+}/********************   ADecl    ********************/
+Arg make_ADecl(Type p1, Ident p2)
+{
+    Arg tmp = (Arg) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating ADecl!\n");
+        exit(1);
+    }
+    tmp->kind = is_ADecl;
+    tmp->u.adecl_.type_ = p1;
+    tmp->u.adecl_.ident_ = p2;
+    return tmp;
+}
+/********************   APred    ********************/
+Arg make_APred(Type p1, Ident p2, Exp p3)
+{
+    Arg tmp = (Arg) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating APred!\n");
+        exit(1);
+    }
+    tmp->kind = is_APred;
+    tmp->u.apred_.type_ = p1;
+    tmp->u.apred_.ident_ = p2;
+    tmp->u.apred_.exp_ = p3;
     return tmp;
 }/********************   Dec    ********************/
 Decl make_Dec(Type p1, ListIdent p2)
@@ -80,6 +145,18 @@ ListDecl make_ListDecl(Decl p1, ListDecl p2)
     }
     tmp->decl_ = p1;
     tmp->listdecl_ = p2;
+    return tmp;
+}/********************   ListArg    ********************/
+ListArg make_ListArg(Arg p1, ListArg p2)
+{
+    ListArg tmp = (ListArg) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating ListArg!\n");
+        exit(1);
+    }
+    tmp->arg_ = p1;
+    tmp->listarg_ = p2;
     return tmp;
 }/********************   ListIdent    ********************/
 ListIdent make_ListIdent(Ident p1, ListIdent p2)

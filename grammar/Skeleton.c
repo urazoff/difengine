@@ -14,11 +14,40 @@ void visitProgram(Program p)
   {
   case is_Prog:
     /* Code for Prog Goes Here */
-    visitListFunction(p->u.prog_.listfunction_);
+    visitListExternal_declaration(p->u.prog_.listexternal_declaration_);
     break;
 
   default:
     fprintf(stderr, "Error: bad kind field when printing Program!\n");
+    exit(1);
+  }
+}
+
+void visitListExternal_declaration(ListExternal_declaration listexternal_declaration)
+{
+  while(listexternal_declaration  != 0)
+  {
+    /* Code For ListExternal_declaration Goes Here */
+    visitExternal_declaration(listexternal_declaration->external_declaration_);
+    listexternal_declaration = listexternal_declaration->listexternal_declaration_;
+  }
+}
+
+void visitExternal_declaration(External_declaration p)
+{
+  switch(p->kind)
+  {
+  case is_Afunc:
+    /* Code for Afunc Goes Here */
+    visitFunction(p->u.afunc_.function_);
+    break;
+  case is_Global:
+    /* Code for Global Goes Here */
+    visitStm(p->u.global_.stm_);
+    break;
+
+  default:
+    fprintf(stderr, "Error: bad kind field when printing External_declaration!\n");
     exit(1);
   }
 }
@@ -31,12 +60,34 @@ void visitFunction(Function p)
     /* Code for Fun Goes Here */
     visitType(p->u.fun_.type_);
     visitIdent(p->u.fun_.ident_);
-    visitListDecl(p->u.fun_.listdecl_);
+    visitListArg(p->u.fun_.listarg_);
     visitListStm(p->u.fun_.liststm_);
     break;
 
   default:
     fprintf(stderr, "Error: bad kind field when printing Function!\n");
+    exit(1);
+  }
+}
+
+void visitArg(Arg p)
+{
+  switch(p->kind)
+  {
+  case is_ADecl:
+    /* Code for ADecl Goes Here */
+    visitType(p->u.adecl_.type_);
+    visitIdent(p->u.adecl_.ident_);
+    break;
+  case is_APred:
+    /* Code for APred Goes Here */
+    visitType(p->u.apred_.type_);
+    visitIdent(p->u.apred_.ident_);
+    visitExp(p->u.apred_.exp_);
+    break;
+
+  default:
+    fprintf(stderr, "Error: bad kind field when printing Arg!\n");
     exit(1);
   }
 }
@@ -84,6 +135,16 @@ void visitListDecl(ListDecl listdecl)
     /* Code For ListDecl Goes Here */
     visitDecl(listdecl->decl_);
     listdecl = listdecl->listdecl_;
+  }
+}
+
+void visitListArg(ListArg listarg)
+{
+  while(listarg  != 0)
+  {
+    /* Code For ListArg Goes Here */
+    visitArg(listarg->arg_);
+    listarg = listarg->listarg_;
   }
 }
 

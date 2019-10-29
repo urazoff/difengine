@@ -6,11 +6,15 @@
 
 
 void visitProgram(Program p);
+void visitListExternal_declaration(ListExternal_declaration p);
+void visitExternal_declaration(External_declaration p);
 void visitFunction(Function p);
+void visitArg(Arg p);
 void visitDecl(Decl p);
 void visitListFunction(ListFunction p);
 void visitListStm(ListStm p);
 void visitListDecl(ListDecl p);
+void visitListArg(ListArg p);
 void visitListIdent(ListIdent p);
 void visitStm(Stm p);
 void visitExp(Exp p);

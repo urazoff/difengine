@@ -95,11 +95,32 @@ char *printProgram(Program p)
   ppProgram(p, 0);
   return buf_;
 }
+char *printListExternal_declaration(ListExternal_declaration p)
+{
+  _n_ = 0;
+  bufReset();
+  ppListExternal_declaration(p, 0);
+  return buf_;
+}
+char *printExternal_declaration(External_declaration p)
+{
+  _n_ = 0;
+  bufReset();
+  ppExternal_declaration(p, 0);
+  return buf_;
+}
 char *printFunction(Function p)
 {
   _n_ = 0;
   bufReset();
   ppFunction(p, 0);
+  return buf_;
+}
+char *printArg(Arg p)
+{
+  _n_ = 0;
+  bufReset();
+  ppArg(p, 0);
   return buf_;
 }
 char *printDecl(Decl p)
@@ -128,6 +149,13 @@ char *printListDecl(ListDecl p)
   _n_ = 0;
   bufReset();
   ppListDecl(p, 0);
+  return buf_;
+}
+char *printListArg(ListArg p)
+{
+  _n_ = 0;
+  bufReset();
+  ppListArg(p, 0);
   return buf_;
 }
 char *printListIdent(ListIdent p)
@@ -172,11 +200,32 @@ char *showProgram(Program p)
   shProgram(p);
   return buf_;
 }
+char *showListExternal_declaration(ListExternal_declaration p)
+{
+  _n_ = 0;
+  bufReset();
+  shListExternal_declaration(p);
+  return buf_;
+}
+char *showExternal_declaration(External_declaration p)
+{
+  _n_ = 0;
+  bufReset();
+  shExternal_declaration(p);
+  return buf_;
+}
 char *showFunction(Function p)
 {
   _n_ = 0;
   bufReset();
   shFunction(p);
+  return buf_;
+}
+char *showArg(Arg p)
+{
+  _n_ = 0;
+  bufReset();
+  shArg(p);
   return buf_;
 }
 char *showDecl(Decl p)
@@ -205,6 +254,13 @@ char *showListDecl(ListDecl p)
   _n_ = 0;
   bufReset();
   shListDecl(p);
+  return buf_;
+}
+char *showListArg(ListArg p)
+{
+  _n_ = 0;
+  bufReset();
+  shListArg(p);
   return buf_;
 }
 char *showListIdent(ListIdent p)
@@ -248,7 +304,7 @@ void ppProgram(Program p, int _i_)
   {
   case is_Prog:
     if (_i_ > 0) renderC(_L_PAREN);
-    ppListFunction(p->u.prog_.listfunction_, 0);
+    ppListExternal_declaration(p->u.prog_.listexternal_declaration_, 0);
 
     if (_i_ > 0) renderC(_R_PAREN);
     break;
@@ -256,6 +312,50 @@ void ppProgram(Program p, int _i_)
 
   default:
     fprintf(stderr, "Error: bad kind field when printing Program!\n");
+    exit(1);
+  }
+}
+
+void ppListExternal_declaration(ListExternal_declaration listexternal_declaration, int i)
+{
+  while(listexternal_declaration != 0)
+  {
+    if (listexternal_declaration->listexternal_declaration_ == 0)
+    {
+      ppExternal_declaration(listexternal_declaration->external_declaration_, i);
+      renderS("");
+      listexternal_declaration = 0;
+    }
+    else
+    {
+      ppExternal_declaration(listexternal_declaration->external_declaration_, i);
+      renderS("");
+      listexternal_declaration = listexternal_declaration->listexternal_declaration_;
+    }
+  }
+}
+
+void ppExternal_declaration(External_declaration p, int _i_)
+{
+  switch(p->kind)
+  {
+  case is_Afunc:
+    if (_i_ > 0) renderC(_L_PAREN);
+    ppFunction(p->u.afunc_.function_, 0);
+
+    if (_i_ > 0) renderC(_R_PAREN);
+    break;
+
+  case is_Global:
+    if (_i_ > 0) renderC(_L_PAREN);
+    ppStm(p->u.global_.stm_, 0);
+
+    if (_i_ > 0) renderC(_R_PAREN);
+    break;
+
+
+  default:
+    fprintf(stderr, "Error: bad kind field when printing External_declaration!\n");
     exit(1);
   }
 }
@@ -269,7 +369,7 @@ void ppFunction(Function p, int _i_)
     ppType(p->u.fun_.type_, 0);
     ppIdent(p->u.fun_.ident_, 0);
     renderC('(');
-    ppListDecl(p->u.fun_.listdecl_, 0);
+    ppListArg(p->u.fun_.listarg_, 0);
     renderC(')');
     renderC('{');
     ppListStm(p->u.fun_.liststm_, 0);
@@ -281,6 +381,35 @@ void ppFunction(Function p, int _i_)
 
   default:
     fprintf(stderr, "Error: bad kind field when printing Function!\n");
+    exit(1);
+  }
+}
+
+void ppArg(Arg p, int _i_)
+{
+  switch(p->kind)
+  {
+  case is_ADecl:
+    if (_i_ > 0) renderC(_L_PAREN);
+    ppType(p->u.adecl_.type_, 0);
+    ppIdent(p->u.adecl_.ident_, 0);
+
+    if (_i_ > 0) renderC(_R_PAREN);
+    break;
+
+  case is_APred:
+    if (_i_ > 0) renderC(_L_PAREN);
+    ppType(p->u.apred_.type_, 0);
+    ppIdent(p->u.apred_.ident_, 0);
+    renderC('=');
+    ppExp(p->u.apred_.exp_, 0);
+
+    if (_i_ > 0) renderC(_R_PAREN);
+    break;
+
+
+  default:
+    fprintf(stderr, "Error: bad kind field when printing Arg!\n");
     exit(1);
   }
 }
@@ -357,6 +486,25 @@ void ppListDecl(ListDecl listdecl, int i)
       ppDecl(listdecl->decl_, i);
       renderC(',');
       listdecl = listdecl->listdecl_;
+    }
+  }
+}
+
+void ppListArg(ListArg listarg, int i)
+{
+  while(listarg != 0)
+  {
+    if (listarg->listarg_ == 0)
+    {
+      ppArg(listarg->arg_, i);
+
+      listarg = 0;
+    }
+    else
+    {
+      ppArg(listarg->arg_, i);
+      renderC(',');
+      listarg = listarg->listarg_;
     }
   }
 }
@@ -761,11 +909,6 @@ void ppIdent(String s, int i)
   renderS(s);
 }
 
-void ppIdent(String s, int i)
-{
-  renderS(s);
-}
-
 
 void shProgram(Program p)
 {
@@ -778,7 +921,7 @@ void shProgram(Program p)
 
     bufAppendC(' ');
 
-    shListFunction(p->u.prog_.listfunction_);
+    shListExternal_declaration(p->u.prog_.listexternal_declaration_);
 
     bufAppendC(')');
 
@@ -786,6 +929,61 @@ void shProgram(Program p)
 
   default:
     fprintf(stderr, "Error: bad kind field when showing Program!\n");
+    exit(1);
+  }
+}
+
+void shListExternal_declaration(ListExternal_declaration listexternal_declaration)
+{
+  bufAppendC('[');
+  while(listexternal_declaration != 0)
+  {
+    if (listexternal_declaration->listexternal_declaration_)
+    {
+      shExternal_declaration(listexternal_declaration->external_declaration_);
+      bufAppendS(", ");
+      listexternal_declaration = listexternal_declaration->listexternal_declaration_;
+    }
+    else
+    {
+      shExternal_declaration(listexternal_declaration->external_declaration_);
+      listexternal_declaration = 0;
+    }
+  }
+  bufAppendC(']');
+}
+
+void shExternal_declaration(External_declaration p)
+{
+  switch(p->kind)
+  {
+  case is_Afunc:
+    bufAppendC('(');
+
+    bufAppendS("Afunc");
+
+    bufAppendC(' ');
+
+    shFunction(p->u.afunc_.function_);
+
+    bufAppendC(')');
+
+    break;
+  case is_Global:
+    bufAppendC('(');
+
+    bufAppendS("Global");
+
+    bufAppendC(' ');
+
+    shStm(p->u.global_.stm_);
+
+    bufAppendC(')');
+
+    break;
+
+  default:
+    fprintf(stderr, "Error: bad kind field when showing External_declaration!\n");
     exit(1);
   }
 }
@@ -805,7 +1003,7 @@ void shFunction(Function p)
   bufAppendC(' ');
     shIdent(p->u.fun_.ident_);
   bufAppendC(' ');
-    shListDecl(p->u.fun_.listdecl_);
+    shListArg(p->u.fun_.listarg_);
   bufAppendC(' ');
     shListStm(p->u.fun_.liststm_);
 
@@ -815,6 +1013,47 @@ void shFunction(Function p)
 
   default:
     fprintf(stderr, "Error: bad kind field when showing Function!\n");
+    exit(1);
+  }
+}
+
+void shArg(Arg p)
+{
+  switch(p->kind)
+  {
+  case is_ADecl:
+    bufAppendC('(');
+
+    bufAppendS("ADecl");
+
+    bufAppendC(' ');
+
+    shType(p->u.adecl_.type_);
+  bufAppendC(' ');
+    shIdent(p->u.adecl_.ident_);
+
+    bufAppendC(')');
+
+    break;
+  case is_APred:
+    bufAppendC('(');
+
+    bufAppendS("APred");
+
+    bufAppendC(' ');
+
+    shType(p->u.apred_.type_);
+  bufAppendC(' ');
+    shIdent(p->u.apred_.ident_);
+  bufAppendC(' ');
+    shExp(p->u.apred_.exp_);
+
+    bufAppendC(')');
+
+    break;
+
+  default:
+    fprintf(stderr, "Error: bad kind field when showing Arg!\n");
     exit(1);
   }
 }
@@ -899,6 +1138,26 @@ void shListDecl(ListDecl listdecl)
     {
       shDecl(listdecl->decl_);
       listdecl = 0;
+    }
+  }
+  bufAppendC(']');
+}
+
+void shListArg(ListArg listarg)
+{
+  bufAppendC('[');
+  while(listarg != 0)
+  {
+    if (listarg->listarg_)
+    {
+      shArg(listarg->arg_);
+      bufAppendS(", ");
+      listarg = listarg->listarg_;
+    }
+    else
+    {
+      shArg(listarg->arg_);
+      listarg = 0;
     }
   }
   bufAppendC(']');
@@ -1441,14 +1700,6 @@ void shIdent(String s)
   bufAppendS(s);
   bufAppendC('\"');
 }
-
-void shIdent(String s)
-{
-  bufAppendC('\"');
-  bufAppendS(s);
-  bufAppendC('\"');
-}
-
 
 void bufAppendS(const char *s)
 {
