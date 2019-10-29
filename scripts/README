@@ -3,4 +3,4 @@ useful while building, extending or managing Difengine.
 Some are also generally useful UNIX tools.
 
 cleanupbnfc.sh            Script for convenient making of grammar front-end
-abitype.py                Take C code and deletes funcitons redefines
+unredef.py                Take C code and deletes funcitons redefines
