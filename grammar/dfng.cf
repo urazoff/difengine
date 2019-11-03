@@ -39,6 +39,7 @@ EFalse.  Exp15 ::= "false" ;
 EIdent.  Exp15 ::= Ident;
 
 EApp.    Exp15  ::= Ident "(" [Exp] ")" ;
+EArr.    Exp15  ::= "[" [Exp] "]" ;
 EPIncr.  Exp14  ::= Exp15 "++" ;
 EPDecr.  Exp14  ::= Exp15 "--" ;
 EIncr.   Exp13  ::= "++" Exp14 ;
@@ -65,5 +66,7 @@ Tbool.   Type ::= "bool" ;
 Tdouble. Type ::= "double" ;
 Tint.    Type ::= "int" ;
 Tvoid.   Type ::= "void" ;
+Tstring. Type ::= "string" ;
+Tmatrix. Type ::= "matrix" ;
 
 token Ident (letter (letter | digit | '_')*) ;
