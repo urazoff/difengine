@@ -25,6 +25,7 @@ separator nonempty Ident "," ;
 
 SDecl.   Stm ::= Decl ";"  ;
 SDecls.  Stm ::= Decl "," [Ident] ";";
+SClassD. Stm ::= "class" Ident "{" [External_declaration] "}" ; 
 SInit.   Stm ::= Decl "=" Exp ";";
 SExp.    Stm ::= Exp ";" ;
 SBlock.  Stm ::= "{" [Stm] "}" ;
