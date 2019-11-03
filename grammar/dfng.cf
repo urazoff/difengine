@@ -41,6 +41,8 @@ EIdent.  Exp15 ::= Ident;
 
 EApp.    Exp15  ::= Ident "(" [Exp] ")" ;
 EArr.    Exp15  ::= "[" [Exp] "]" ;
+Efld.    Exp15  ::= Ident "." Ident;
+Emethod. Exp15  ::= Ident "." Ident "(" [Exp] ")" ;
 EPIncr.  Exp14  ::= Exp15 "++" ;
 EPDecr.  Exp14  ::= Exp15 "--" ;
 EIncr.   Exp13  ::= "++" Exp14 ;
