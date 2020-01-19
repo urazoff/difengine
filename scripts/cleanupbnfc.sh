@@ -13,5 +13,5 @@ python3 ../scripts/unredef.py Printer.c
 
 make
 
-echo "Delete objects files and auxiliary files"
+echo "Delete object files and auxiliary files"
 rm *.o *.bak *.l *.y *.h
