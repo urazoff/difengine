@@ -197,6 +197,20 @@ Stm make_SDecls(Decl p1, ListIdent p2)
     tmp->u.sdecls_.listident_ = p2;
     return tmp;
 }
+/********************   SClassD    ********************/
+Stm make_SClassD(Ident p1, ListExternal_declaration p2)
+{
+    Stm tmp = (Stm) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating SClassD!\n");
+        exit(1);
+    }
+    tmp->kind = is_SClassD;
+    tmp->u.sclassd_.ident_ = p1;
+    tmp->u.sclassd_.listexternal_declaration_ = p2;
+    return tmp;
+}
 /********************   SInit    ********************/
 Stm make_SInit(Decl p1, Exp p2)
 {
@@ -353,6 +367,48 @@ Exp make_EApp(Ident p1, ListExp p2)
     tmp->kind = is_EApp;
     tmp->u.eapp_.ident_ = p1;
     tmp->u.eapp_.listexp_ = p2;
+    return tmp;
+}
+/********************   EArr    ********************/
+Exp make_EArr(ListExp p1)
+{
+    Exp tmp = (Exp) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating EArr!\n");
+        exit(1);
+    }
+    tmp->kind = is_EArr;
+    tmp->u.earr_.listexp_ = p1;
+    return tmp;
+}
+/********************   Efld    ********************/
+Exp make_Efld(Ident p1, Ident p2)
+{
+    Exp tmp = (Exp) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating Efld!\n");
+        exit(1);
+    }
+    tmp->kind = is_Efld;
+    tmp->u.efld_.ident_1 = p1;
+    tmp->u.efld_.ident_2 = p2;
+    return tmp;
+}
+/********************   Emethod    ********************/
+Exp make_Emethod(Ident p1, Ident p2, ListExp p3)
+{
+    Exp tmp = (Exp) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating Emethod!\n");
+        exit(1);
+    }
+    tmp->kind = is_Emethod;
+    tmp->u.emethod_.ident_1 = p1;
+    tmp->u.emethod_.ident_2 = p2;
+    tmp->u.emethod_.listexp_ = p3;
     return tmp;
 }
 /********************   EPIncr    ********************/
@@ -646,5 +702,29 @@ Type make_Tvoid()
         exit(1);
     }
     tmp->kind = is_Tvoid;
+    return tmp;
+}
+/********************   Tstring    ********************/
+Type make_Tstring()
+{
+    Type tmp = (Type) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating Tstring!\n");
+        exit(1);
+    }
+    tmp->kind = is_Tstring;
+    return tmp;
+}
+/********************   Tmatrix    ********************/
+Type make_Tmatrix()
+{
+    Type tmp = (Type) malloc(sizeof(*tmp));
+    if (!tmp)
+    {
+        fprintf(stderr, "Error: out of memory when allocating Tmatrix!\n");
+        exit(1);
+    }
+    tmp->kind = is_Tmatrix;
     return tmp;
 }

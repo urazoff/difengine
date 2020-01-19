@@ -171,6 +171,11 @@ void visitStm(Stm p)
     visitDecl(p->u.sdecls_.decl_);
     visitListIdent(p->u.sdecls_.listident_);
     break;
+  case is_SClassD:
+    /* Code for SClassD Goes Here */
+    visitIdent(p->u.sclassd_.ident_);
+    visitListExternal_declaration(p->u.sclassd_.listexternal_declaration_);
+    break;
   case is_SInit:
     /* Code for SInit Goes Here */
     visitDecl(p->u.sinit_.decl_);
@@ -232,6 +237,21 @@ void visitExp(Exp p)
     /* Code for EApp Goes Here */
     visitIdent(p->u.eapp_.ident_);
     visitListExp(p->u.eapp_.listexp_);
+    break;
+  case is_EArr:
+    /* Code for EArr Goes Here */
+    visitListExp(p->u.earr_.listexp_);
+    break;
+  case is_Efld:
+    /* Code for Efld Goes Here */
+    visitIdent(p->u.efld_.ident_1);
+    visitIdent(p->u.efld_.ident_2);
+    break;
+  case is_Emethod:
+    /* Code for Emethod Goes Here */
+    visitIdent(p->u.emethod_.ident_1);
+    visitIdent(p->u.emethod_.ident_2);
+    visitListExp(p->u.emethod_.listexp_);
     break;
   case is_EPIncr:
     /* Code for EPIncr Goes Here */
@@ -346,6 +366,12 @@ void visitType(Type p)
     break;
   case is_Tvoid:
     /* Code for Tvoid Goes Here */
+    break;
+  case is_Tstring:
+    /* Code for Tstring Goes Here */
+    break;
+  case is_Tmatrix:
+    /* Code for Tmatrix Goes Here */
     break;
 
   default:

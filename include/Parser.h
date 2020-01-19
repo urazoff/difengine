@@ -66,9 +66,15 @@ typedef struct YYLTYPE
 #define _SYMB_29 288
 #define _SYMB_30 289
 #define _SYMB_31 290
-#define _INTEGER_ 291
-#define _DOUBLE_ 292
-#define _IDENT_ 293
+#define _SYMB_32 291
+#define _SYMB_33 292
+#define _SYMB_34 293
+#define _SYMB_35 294
+#define _SYMB_36 295
+#define _SYMB_37 296
+#define _INTEGER_ 297
+#define _DOUBLE_ 298
+#define _IDENT_ 299
 
 extern YYLTYPE yylloc;
 extern YYSTYPE yylval;

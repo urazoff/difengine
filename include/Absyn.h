@@ -157,11 +157,12 @@ ListIdent make_ListIdent(Ident p1, ListIdent p2);
 struct Stm_
 {
 
-  enum { is_SDecl, is_SDecls, is_SInit, is_SExp, is_SBlock, is_SWhile, is_SReturn, is_SIfElse } kind;
+  enum { is_SDecl, is_SDecls, is_SClassD, is_SInit, is_SExp, is_SBlock, is_SWhile, is_SReturn, is_SIfElse } kind;
   union
   {
     struct { Decl decl_; } sdecl_;
     struct { Decl decl_; ListIdent listident_; } sdecls_;
+    struct { Ident ident_; ListExternal_declaration listexternal_declaration_; } sclassd_;
     struct { Decl decl_; Exp exp_; } sinit_;
     struct { Exp exp_; } sexp_;
     struct { ListStm liststm_; } sblock_;
@@ -173,6 +174,7 @@ struct Stm_
 
 Stm make_SDecl(Decl p0);
 Stm make_SDecls(Decl p0, ListIdent p1);
+Stm make_SClassD(Ident p0, ListExternal_declaration p1);
 Stm make_SInit(Decl p0, Exp p1);
 Stm make_SExp(Exp p0);
 Stm make_SBlock(ListStm p0);
@@ -183,13 +185,16 @@ Stm make_SIfElse(Exp p0, Stm p1, Stm p2);
 struct Exp_
 {
 
-  enum { is_EInt, is_EDouble, is_ETrue, is_EFalse, is_EIdent, is_EApp, is_EPIncr, is_EPDecr, is_EIncr, is_EDecr, is_ETimes, is_EDiv, is_EPlus, is_EMinus, is_ELt, is_EGt, is_ELtEq, is_EGtWq, is_EEq, is_ENEq, is_EAnd, is_EOr, is_EAss } kind;
+  enum { is_EInt, is_EDouble, is_ETrue, is_EFalse, is_EIdent, is_EApp, is_EArr, is_Efld, is_Emethod, is_EPIncr, is_EPDecr, is_EIncr, is_EDecr, is_ETimes, is_EDiv, is_EPlus, is_EMinus, is_ELt, is_EGt, is_ELtEq, is_EGtWq, is_EEq, is_ENEq, is_EAnd, is_EOr, is_EAss } kind;
   union
   {
     struct { Integer integer_; } eint_;
     struct { Double double_; } edouble_;
     struct { Ident ident_; } eident_;
     struct { Ident ident_; ListExp listexp_; } eapp_;
+    struct { ListExp listexp_; } earr_;
+    struct { Ident ident_1, ident_2; } efld_;
+    struct { Ident ident_1, ident_2; ListExp listexp_; } emethod_;
     struct { Exp exp_; } epincr_;
     struct { Exp exp_; } epdecr_;
     struct { Exp exp_; } eincr_;
@@ -216,6 +221,9 @@ Exp make_ETrue(void);
 Exp make_EFalse(void);
 Exp make_EIdent(Ident p0);
 Exp make_EApp(Ident p0, ListExp p1);
+Exp make_EArr(ListExp p0);
+Exp make_Efld(Ident p0, Ident p1);
+Exp make_Emethod(Ident p0, Ident p1, ListExp p2);
 Exp make_EPIncr(Exp p0);
 Exp make_EPDecr(Exp p0);
 Exp make_EIncr(Exp p0);
@@ -244,7 +252,7 @@ ListExp make_ListExp(Exp p1, ListExp p2);
 struct Type_
 {
 
-  enum { is_Tbool, is_Tdouble, is_Tint, is_Tvoid } kind;
+  enum { is_Tbool, is_Tdouble, is_Tint, is_Tvoid, is_Tstring, is_Tmatrix } kind;
   union
   {
   } u;
@@ -254,6 +262,8 @@ Type make_Tbool(void);
 Type make_Tdouble(void);
 Type make_Tint(void);
 Type make_Tvoid(void);
+Type make_Tstring(void);
+Type make_Tmatrix(void);
 
 
 

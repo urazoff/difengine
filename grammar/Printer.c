@@ -550,6 +550,17 @@ void ppStm(Stm p, int _i_)
     if (_i_ > 0) renderC(_R_PAREN);
     break;
 
+  case is_SClassD:
+    if (_i_ > 0) renderC(_L_PAREN);
+    renderS("class");
+    ppIdent(p->u.sclassd_.ident_, 0);
+    renderC('{');
+    ppListExternal_declaration(p->u.sclassd_.listexternal_declaration_, 0);
+    renderC('}');
+
+    if (_i_ > 0) renderC(_R_PAREN);
+    break;
+
   case is_SInit:
     if (_i_ > 0) renderC(_L_PAREN);
     ppDecl(p->u.sinit_.decl_, 0);
@@ -661,6 +672,36 @@ void ppExp(Exp p, int _i_)
     ppIdent(p->u.eapp_.ident_, 0);
     renderC('(');
     ppListExp(p->u.eapp_.listexp_, 0);
+    renderC(')');
+
+    if (_i_ > 15) renderC(_R_PAREN);
+    break;
+
+  case is_EArr:
+    if (_i_ > 15) renderC(_L_PAREN);
+    renderC('[');
+    ppListExp(p->u.earr_.listexp_, 0);
+    renderC(']');
+
+    if (_i_ > 15) renderC(_R_PAREN);
+    break;
+
+  case is_Efld:
+    if (_i_ > 15) renderC(_L_PAREN);
+    ppIdent(p->u.efld_.ident_1, 0);
+    renderC('.');
+    ppIdent(p->u.efld_.ident_2, 0);
+
+    if (_i_ > 15) renderC(_R_PAREN);
+    break;
+
+  case is_Emethod:
+    if (_i_ > 15) renderC(_L_PAREN);
+    ppIdent(p->u.emethod_.ident_1, 0);
+    renderC('.');
+    ppIdent(p->u.emethod_.ident_2, 0);
+    renderC('(');
+    ppListExp(p->u.emethod_.listexp_, 0);
     renderC(')');
 
     if (_i_ > 15) renderC(_R_PAREN);
@@ -869,6 +910,20 @@ void ppType(Type p, int _i_)
   case is_Tvoid:
     if (_i_ > 0) renderC(_L_PAREN);
     renderS("void");
+
+    if (_i_ > 0) renderC(_R_PAREN);
+    break;
+
+  case is_Tstring:
+    if (_i_ > 0) renderC(_L_PAREN);
+    renderS("string");
+
+    if (_i_ > 0) renderC(_R_PAREN);
+    break;
+
+  case is_Tmatrix:
+    if (_i_ > 0) renderC(_L_PAREN);
+    renderS("matrix");
 
     if (_i_ > 0) renderC(_R_PAREN);
     break;
@@ -1213,6 +1268,20 @@ void shStm(Stm p)
     bufAppendC(')');
 
     break;
+  case is_SClassD:
+    bufAppendC('(');
+
+    bufAppendS("SClassD");
+
+    bufAppendC(' ');
+
+    shIdent(p->u.sclassd_.ident_);
+  bufAppendC(' ');
+    shListExternal_declaration(p->u.sclassd_.listexternal_declaration_);
+
+    bufAppendC(')');
+
+    break;
   case is_SInit:
     bufAppendC('(');
 
@@ -1366,6 +1435,48 @@ void shExp(Exp p)
     shIdent(p->u.eapp_.ident_);
   bufAppendC(' ');
     shListExp(p->u.eapp_.listexp_);
+
+    bufAppendC(')');
+
+    break;
+  case is_EArr:
+    bufAppendC('(');
+
+    bufAppendS("EArr");
+
+    bufAppendC(' ');
+
+    shListExp(p->u.earr_.listexp_);
+
+    bufAppendC(')');
+
+    break;
+  case is_Efld:
+    bufAppendC('(');
+
+    bufAppendS("Efld");
+
+    bufAppendC(' ');
+
+    shIdent(p->u.efld_.ident_1);
+  bufAppendC(' ');
+    shIdent(p->u.efld_.ident_2);
+
+    bufAppendC(')');
+
+    break;
+  case is_Emethod:
+    bufAppendC('(');
+
+    bufAppendS("Emethod");
+
+    bufAppendC(' ');
+
+    shIdent(p->u.emethod_.ident_1);
+  bufAppendC(' ');
+    shIdent(p->u.emethod_.ident_2);
+  bufAppendC(' ');
+    shListExp(p->u.emethod_.listexp_);
 
     bufAppendC(')');
 
@@ -1658,6 +1769,22 @@ void shType(Type p)
   case is_Tvoid:
 
     bufAppendS("Tvoid");
+
+
+
+
+    break;
+  case is_Tstring:
+
+    bufAppendS("Tstring");
+
+
+
+
+    break;
+  case is_Tmatrix:
+
+    bufAppendS("Tmatrix");
 
 
 
