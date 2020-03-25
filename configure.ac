@@ -1,6 +1,6 @@
 m4_define(DIFENGINE_VERSION, 0.1)
 
-AC_INIT([difengine], [DIFENGINE_VERSION], [main@dilshod.xyz])
+AC_INIT([difengine], [DIFENGINE_VERSION], [dilshod@difengine.xyz])
 AM_INIT_AUTOMAKE
 AC_PROG_CC
 AC_CONFIG_FILES([Makefile])
