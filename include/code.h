@@ -5,7 +5,7 @@
 
 /**
  * @file
- * Code chunk
+ * Code object
  */
 
 #ifdef __cplusplus
@@ -27,6 +27,8 @@ typedef struct {
 extern DfCodeObj* df_code_obj_init();
 
 extern void df_code_obj_upd(DfCodeObj *code, uint8_t opcode);
+
+extern void df_code_obj_free(DfCodeObj *code);
 
 #ifdef __cplusplus
 }

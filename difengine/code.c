@@ -7,7 +7,7 @@
 DfCodeObj*
 df_code_obj_init()
 {
-    DfCodeObj *new_code = df_realloc(NULL, 0, sizeof(DfCodeObj));
+    DfCodeObj *new_code = DF_MEM_ALLOC(sizeof(DfCodeObj));
 
     new_code->count= 0;
     new_code->capacity = 0;
@@ -29,4 +29,14 @@ df_code_obj_upd(DfCodeObj *code, uint8_t opcode)
 
     code->opcodes[code->count] = opcode;
     code->count++;
+}
+
+void
+df_code_obj_free(DfCodeObj *code)
+{
+    DF_MEM_FREE_ARRAY(uint8_t, code->opcodes, code->capacity);
+
+    DF_MEM_FREE(code);
+
+    code = df_code_obj_init();
 }
