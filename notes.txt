@@ -1,0 +1,18 @@
+Axioms:
+1. Keep it simple. Make it more complex only if it will be more efficient.
+
+Internal design:
+1. Explicitly define what kind of object is field or function argument
+   if it is not any object.
+
+TODO:
+1. List objects: extend items vector. Define extension itself in /memory.
+2. Code: how to consider opcode if opcode is list object.
+   May be do internal array of uints?
+3. Objects: make it possible to cast float and list to DfObject and vice versa.
+4. Generalize/put to function common operations (i.e. init, cast, 
+   get list element and cast it to some specific object etc).
+5. Get rid of memory leak (always).
+6. Error handling.
+7. Make code consistent codestyle-wise.
+8. Write and build doc.
