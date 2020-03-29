@@ -1,42 +1,41 @@
 #include "code.h"
+#include "object.h"
+#include "intobject.h"
 #include "memory.h"
-
-#define CODE_UPD_CAPACITY(_capacity) \
-    ((_capacity) < 8 ? 8 : (_capacity) * 2)
 
 DfCodeObj*
 df_code_obj_init()
 {
-    DfCodeObj *new_code = DF_MEM_ALLOC(sizeof(DfCodeObj));
+    DfCodeObj *code = DF_MEM_ALLOC(sizeof(DfCodeObj));
 
-    new_code->count= 0;
-    new_code->capacity = 0;
-    new_code->opcodes = NULL;
+    code->opcodes = df_list_obj_init();
+    code->consts = df_list_obj_init();
 
-    return new_code;
+    return code;
 }
 
 void
-df_code_obj_upd(DfCodeObj *code, uint8_t opcode)
+df_code_obj_add_op(DfCodeObj *code, uint8_t opcode)
 {
-    if (code->capacity < code->count + 1)
-    {
-        int old_capacity = code->capacity;
-        code->capacity = CODE_UPD_CAPACITY(old_capacity);
-        code->opcodes = DF_MEM_GROW_ARRAY(uint8_t, code->opcodes,
-                                          old_capacity, code->capacity);
-    }
+    DfIntObj *opcode_obj =  DF_MEM_ALLOC(sizeof(DfIntObj));
+    opcode_obj->val = opcode;
 
-    code->opcodes[code->count] = opcode;
-    code->count++;
+    df_list_obj_extend(code->opcodes, (DfObject *)opcode_obj);
+}
+
+int
+df_code_obj_add_const(DfCodeObj *code, DfObject *const_obj)
+{
+    df_list_obj_extend(code->consts, const_obj);
+
+    return code->consts->count - 1;
 }
 
 void
-df_code_obj_free(DfCodeObj *code)
+df_code_obj_clear(DfCodeObj *code)
 {
-    DF_MEM_FREE_ARRAY(uint8_t, code->opcodes, code->capacity);
-
+    df_list_obj_clear(code->opcodes);
+    df_list_obj_clear(code->consts);
     DF_MEM_FREE(code);
-
     code = df_code_obj_init();
 }

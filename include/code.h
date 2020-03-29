@@ -1,6 +1,8 @@
 #ifndef _DF_CODE_H_
 #define _DF_CODE_H_
 
+#include "object.h"
+#include "listobject.h"
 #include "difengine.h"
 
 /**
@@ -13,9 +15,9 @@ extern "C" {
 #endif
 
 typedef struct {
-    uint8_t      *opcodes;
-    unsigned int count;
-    unsigned int capacity;
+    DfObject obj;
+    DfListObj *opcodes; /* list of DfIntObj */
+    DfListObj *consts; /* list of any objects) */
 } DfCodeObj;
 
 /**
@@ -26,9 +28,11 @@ typedef struct {
  */
 extern DfCodeObj* df_code_obj_init();
 
-extern void df_code_obj_upd(DfCodeObj *code, uint8_t opcode);
+extern void df_code_obj_add_op(DfCodeObj *code, uint8_t opcode);
 
-extern void df_code_obj_free(DfCodeObj *code);
+extern int df_code_obj_add_const(DfCodeObj *code, DfObject *const_object);
+
+extern void df_code_obj_clear(DfCodeObj *code);
 
 #ifdef __cplusplus
 }
