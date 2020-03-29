@@ -1,6 +1,8 @@
 #ifndef _DF_OBJECT_H_
 #define _DF_OBJECT_H_
 
+#include "difengine.h"
+
 /**
  * @file
  * General object interface
