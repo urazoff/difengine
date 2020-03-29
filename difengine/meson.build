@@ -7,6 +7,11 @@ code_lib = static_library('code',
                            include_directories: global_inc,
                            link_with: mem_lib)
 
+list_lib = static_library('list',
+                          'listobject.c',
+                           include_directories: global_inc,
+                           link_with: mem_lib)
+
 dis_lib = static_library('dis',
                          'dis.c',
                           include_directories: global_inc)
