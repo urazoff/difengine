@@ -11,7 +11,8 @@ extern "C" {
 #endif
 
 typedef enum {
-    RETURN_VALUE
+    RETURN_VALUE,
+    LOAD_CONST
 } Op_Codes;
 
 #ifdef __cplusplus

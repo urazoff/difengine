@@ -28,10 +28,22 @@ typedef struct {
  */
 extern DfCodeObj* df_code_obj_init();
 
+/**
+ * Add opcode to the code's opcodes list.
+ */
 extern void df_code_obj_add_op(DfCodeObj *code, uint8_t opcode);
 
+/**
+ * Add constant to the code's consts list.
+ *
+ * @return
+ *   new const index
+ */
 extern int df_code_obj_add_const(DfCodeObj *code, DfObject *const_object);
 
+/**
+ * Clear out the code object.
+ */
 extern void df_code_obj_clear(DfCodeObj *code);
 
 #ifdef __cplusplus

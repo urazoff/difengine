@@ -20,10 +20,22 @@ typedef struct {
     int capacity;
 } DfListObj;    
 
+/**
+ * Allocate new list object and initialize it.
+ *
+ * @return
+ *   new&empty list object
+ */
 extern DfListObj *df_list_obj_init();
 
+/**
+ * Extend the list by adding new item.
+ */
 extern void df_list_obj_extend(DfListObj *list, DfObject *item);
 
+/**
+ * Clear out the list.
+ */
 extern void df_list_obj_clear(DfListObj *list);
 
 #ifdef __cplusplus
