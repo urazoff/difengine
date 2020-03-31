@@ -14,10 +14,8 @@ extern "C" {
 #endif
 
 typedef struct {
-    DfObject obj;
+    DfObject_CONT_HEAD;
     DfObject **items;
-    int count;
-    int capacity;
 } DfListObj;    
 
 /**

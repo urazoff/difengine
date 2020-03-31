@@ -1,8 +1,6 @@
+#include "internal/container.h"
 #include "listobject.h"
 #include "memory.h"
-
-#define LIST_UPD_CAPACITY(_capacity) \
-    ((_capacity) < 8 ? 8 : (_capacity) * 2)
 
 DfListObj*
 df_list_obj_init()
@@ -12,6 +10,7 @@ df_list_obj_init()
     list->items = NULL;
     list->count= 0;
     list->capacity = 0;
+    list->overallocate = 0;
 
     return list;
 }
@@ -22,7 +21,12 @@ df_list_obj_extend(DfListObj *list, DfObject *item)
     if (list->capacity < list->count + 1)
     {
         int old_capacity = list->capacity;
-        list->capacity = LIST_UPD_CAPACITY(old_capacity);
+
+        if (list->overallocate != 0)
+            list->capacity = CONT_UPD_CAPACITY(old_capacity);
+        else
+            list->capacity++;
+
         list->items = DF_MEM_GROW_ARRAY(DfObject *, list->items,
                                         old_capacity, list->capacity);
     }
