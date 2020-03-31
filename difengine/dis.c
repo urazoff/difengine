@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "dis.h"
-#include "listobject.h"
 #include "intobject.h"
+#include "bytesobject.h"
 #include "opcode.h"
 
 static int
@@ -15,12 +15,10 @@ df_dis_op(const char *op_name, int offset)
 static int
 df_dis_load_const(const char *name, DfCodeObj *code, int offset)
 {
-    DfIntObj *operand;
     DfObject *const_obj;
     uint8_t const_index;
 
-    operand = (DfIntObj *)code->opcodes->items[offset + 1];
-    const_index = operand->val;
+    const_index = code->opcodes->items[offset + 1];
     const_obj = code->consts->items[const_index];
 
     /* There are no types yet. So assume that const_obj is of int type. */
@@ -32,19 +30,19 @@ df_dis_load_const(const char *name, DfCodeObj *code, int offset)
 int
 df_dis_code_obj_op(DfCodeObj *code, int offset)
 {
-    DfIntObj *op;
+    uint8_t op;
 
     printf("%04d ", offset);
 
-    op = (DfIntObj *)code->opcodes->items[offset];
-    switch (op->val)
+    op = code->opcodes->items[offset];
+    switch (op)
     {
         case RETURN_VALUE:
             return df_dis_op("RETURN_VALUE", offset);
         case LOAD_CONST:
             return df_dis_load_const("LOAD_CONST", code, offset);
         default:
-            printf("Unknown opcode: %d", op->val);
+            printf("Unknown opcode: %d", op);
             return ++offset;
     }
 }
@@ -52,11 +50,11 @@ df_dis_code_obj_op(DfCodeObj *code, int offset)
 void
 df_dis_code_obj(DfCodeObj *code, const char *name)
 {
-    DfListObj *list = code->opcodes;
+    DfBytesObj *bytes = code->opcodes;
     int offset;
 
     printf("DISASSEMBLE %s \n", name);
 
-    for (offset = 0; offset < list->count; )
+    for (offset = 0; offset < bytes->count; )
          offset = df_dis_code_obj_op(code, offset);
 }
