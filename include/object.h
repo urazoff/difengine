@@ -15,6 +15,12 @@ extern "C" {
 #define Df_size_t size_t
 #define DfType void*
 
+#define DfObject_CONT_HEAD \
+    DfObject obj;          \
+    int count;             \
+    int capacity;          \
+    int overallocate
+
 #define DfDLList \
     struct df_object *next; \
     struct df_object *prev
