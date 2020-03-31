@@ -12,6 +12,11 @@ list_lib = static_library('list',
                            include_directories: global_inc,
                            link_with: mem_lib)
 
+bytes_lib = static_library('bytes',
+                           'bytesobject.c',
+                            include_directories: global_inc,
+                            link_with: mem_lib)
+
 dis_lib = static_library('dis',
                          'dis.c',
                           include_directories: global_inc)
