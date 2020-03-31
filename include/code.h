@@ -3,6 +3,7 @@
 
 #include "object.h"
 #include "listobject.h"
+#include "bytesobject.h"
 #include "difengine.h"
 
 /**
@@ -16,8 +17,9 @@ extern "C" {
 
 typedef struct {
     DfObject obj;
-    DfListObj *opcodes; /* list of DfIntObj */
-    DfListObj *consts; /* list of any objects) */
+    int line;
+    DfBytesObj *opcodes; /* list of bytes */
+    DfListObj *consts;   /* list of any objects */
 } DfCodeObj;
 
 /**

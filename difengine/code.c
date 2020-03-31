@@ -1,6 +1,6 @@
 #include "code.h"
 #include "object.h"
-#include "intobject.h"
+#include "bytesobject.h"
 #include "memory.h"
 
 DfCodeObj*
@@ -8,7 +8,7 @@ df_code_obj_init()
 {
     DfCodeObj *code = DF_MEM_ALLOC(sizeof(DfCodeObj));
 
-    code->opcodes = df_list_obj_init();
+    code->opcodes = df_bytes_obj_init();
     code->consts = df_list_obj_init();
 
     return code;
@@ -17,10 +17,7 @@ df_code_obj_init()
 void
 df_code_obj_add_op(DfCodeObj *code, uint8_t opcode)
 {
-    DfIntObj *opcode_obj =  DF_MEM_ALLOC(sizeof(DfIntObj));
-    opcode_obj->val = opcode;
-
-    df_list_obj_extend(code->opcodes, (DfObject *)opcode_obj);
+    df_bytes_obj_extend(code->opcodes, opcode);
 }
 
 int
@@ -34,7 +31,7 @@ df_code_obj_add_const(DfCodeObj *code, DfObject *const_obj)
 void
 df_code_obj_clear(DfCodeObj *code)
 {
-    df_list_obj_clear(code->opcodes);
+    df_bytes_obj_clear(code->opcodes);
     df_list_obj_clear(code->consts);
     DF_MEM_FREE(code);
     code = df_code_obj_init();
