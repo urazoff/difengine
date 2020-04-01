@@ -16,9 +16,12 @@ int main(int argc, char *argv[])
     DfFloatObj *f_num =  DF_MEM_ALLOC(sizeof(DfFloatObj));
     DfFloatObj *get_f_num;
 
+    printf("List object test starts...\n");
+
     num->val = 1923;
     f_num->val = 3.1415;
     list = df_list_obj_init();
+    list->overallocate = true;
 
     df_list_obj_extend(list, object);
     df_list_obj_extend(list, (DfObject *)num);
@@ -46,4 +49,6 @@ int main(int argc, char *argv[])
     df_list_obj_clear(list);
 
     printf("Success");
+
+    return 0;
 }
