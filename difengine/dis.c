@@ -32,7 +32,7 @@ df_dis_code_obj_op(DfCodeObj *code, int offset)
 {
     uint8_t op;
 
-    printf("%04d ", offset);
+    printf("%04d    %d ", offset, df_code_obj_get_line(code, offset));
 
     op = code->opcodes->items[offset];
     switch (op)

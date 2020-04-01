@@ -17,9 +17,9 @@ extern "C" {
 
 typedef struct {
     DfObject obj;
-    int line;
-    DfBytesObj *opcodes; /* list of bytes */
+    DfBytesObj *opcodes; /* list of opcode bytes */
     DfListObj *consts;   /* list of any objects */
+    DfBytesObj *lines;   /* list of opcodes lines */
 } DfCodeObj;
 
 /**
@@ -33,7 +33,7 @@ extern DfCodeObj* df_code_obj_init();
 /**
  * Add opcode to the code's opcodes list.
  */
-extern void df_code_obj_add_op(DfCodeObj *code, uint8_t opcode);
+extern void df_code_obj_add_op(DfCodeObj *code, uint8_t opcode, int line);
 
 /**
  * Add constant to the code's consts list.
@@ -42,6 +42,14 @@ extern void df_code_obj_add_op(DfCodeObj *code, uint8_t opcode);
  *   new const index
  */
 extern int df_code_obj_add_const(DfCodeObj *code, DfObject *const_object);
+
+/**
+ * Get line number of an opcode by its index in code->opcodes.
+ *
+ * @return
+ *   opcodes's line number
+ */
+extern int df_code_obj_get_line(DfCodeObj *code, int op_index);
 
 /**
  * Clear out the code object.
