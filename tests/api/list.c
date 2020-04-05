@@ -16,8 +16,6 @@ int main(int argc, char *argv[])
     DfFloatObj *f_num =  DF_MEM_ALLOC(sizeof(DfFloatObj));
     DfFloatObj *get_f_num;
 
-    printf("List object test starts...\n");
-
     num->val = 1923;
     f_num->val = 3.1415;
     list = df_list_obj_init();
@@ -48,7 +46,7 @@ int main(int argc, char *argv[])
     DF_MEM_FREE(f_num);
     df_list_obj_clear(list);
 
-    printf("Success");
+    printf("RES: Success\n");
 
     return 0;
 }

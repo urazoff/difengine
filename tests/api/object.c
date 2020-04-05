@@ -6,14 +6,12 @@ int main(int argc, char *argv[])
 {
     DfObject object;
 
-    printf("Object test starts...");
-
     object.rfcnt = 4;
 
     printf("Object layout:\n ---- rfcnt:  %zu \n",
            object.rfcnt);
 
-    printf("Success");
+    printf("RES: Success\n");
 
     return 0;
 }

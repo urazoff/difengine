@@ -1,0 +1,27 @@
+{
+  "suite_name": "API tests",
+  "id": "api",
+  "tests": [
+    {
+      "exe": "code",
+      "name": "Code object",
+      "expectations": [
+        "Success"
+      ]
+    },
+    {
+      "exe": "list",
+      "name": "List object",
+      "expectations": [
+        "Success"
+      ]
+    },
+    {
+      "exe": "object",
+      "name": "Abstract object",
+      "expectations": [
+        "Success"
+      ]
+    }
+  ]
+}
