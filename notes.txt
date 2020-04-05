@@ -23,3 +23,6 @@ Relevant:
 11. Code: RLE encoding may be combined with difference encoding i.e. done after.
     Then, code object should store first line number, code->lines should store
     difference between consecutive line numbers.
+12. Code: LOAD_CONST now handles only indices in [0, 255]. So only 256 constants can be
+    used for now. Will be fixed when operations arguments will be handled.
+13. Build: support configure/make build.
