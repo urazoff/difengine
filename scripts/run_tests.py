@@ -1,7 +1,8 @@
 #! /usr/bin/env python3
-"Run tests in current directory"
+"Run tests in directory"
 
 import sys, os
+import argparse
 import json
 import subprocess
 
@@ -10,15 +11,20 @@ CGREEN = '\33[32m'
 CEND = '\033[0m'
 CINFO = "    "
 
-def main():
-    if not sys.argv[1]:
-        print("No build dir passed")
-        sys.exit() 
+def passed(msg):
+    print(CGREEN + msg + CEND)
 
-    if os.path.exists("suite.json"):
-        with open("suite.json") as suite_file:
+def failed(msg):
+    print(CRED + msg + CEND)
+
+def info(msg):
+    print(CINFO + msg)
+
+def main(args):
+    if os.path.exists(args.suite_dir + "/suite.json"):
+        with open(args.suite_dir + "/suite.json") as suite_file:
             suite = json.load(suite_file)
-            execs = sys.argv[1] + "/tests/" + suite["id"] + "/"; 
+            execs = args.build_dir + "/tests/" + suite["id"] + "/";
             print("Run", suite["suite_name"], "suite")
             for t in suite["tests"]:
                 result = []
@@ -33,14 +39,36 @@ def main():
                     if (line[0:3] == "RES"):
                         result.append(line[5:][:-1])
                     else:
-                        print(CINFO + line[:-1])
+                        if args.verbose:
+                            info(line[:-1])
 
                 if result == t['expectations']:
-                    print(CGREEN + "PASS" + CEND)               
-                
+                    passed("PASS")
+                    if args.verbose:
+                        for r in result:
+                            info(r)
+
+                else:
+                    if args.verbose:
+                        failed("FAIL: Obtained result")
+                        for r in result:
+                            info(r)
+
+                        failed("FAIL: Expected result")
+                        for e in t['expectations']:
+                            info(e)
+                    else:
+                        failed("FAIL")
     else:
-        print("No suite in current directory")
+        print("No suite file. Check the suite_dir passed.")
         sys.exit()
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Run tests in directory.')
+    parser.add_argument("build_dir", help='Build directory')
+    parser.add_argument("suite_dir", help='Suite directory')
+    parser.add_argument("-v", "--verbose", dest="verbose", action='store_true',
+                        help='Verbose output')
+
+    args = parser.parse_args()
+    main(args)
