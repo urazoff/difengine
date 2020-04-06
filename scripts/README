@@ -2,5 +2,5 @@ This directory contains a collection of executable scripts that are
 useful while building, extending or managing Difengine. 
 Some are also generally useful UNIX tools.
 
-cleanupbnfc.sh            Script for convenient making of grammar front-end
-unredef.py                Take C code and deletes funcitons redefines
+run_tests.py            Run tests suite
+test_build_run.sh       Build and run test using run_tests.py
