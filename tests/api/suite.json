@@ -3,6 +3,13 @@
   "id": "api",
   "tests": [
     {
+      "exe": "object",
+      "name": "Abstract object",
+      "expectations": [
+        "Success"
+      ]
+    },
+    {
       "exe": "code",
       "name": "Code object",
       "expectations": [
@@ -10,15 +17,15 @@
       ]
     },
     {
-      "exe": "list",
-      "name": "List object",
+      "exe": "frame",
+      "name": "Stack frame object",
       "expectations": [
         "Success"
       ]
     },
     {
-      "exe": "object",
-      "name": "Abstract object",
+      "exe": "list",
+      "name": "List object",
       "expectations": [
         "Success"
       ]
