@@ -1,11 +1,16 @@
 mem_lib = static_library('memory',
-                         'memory.c', 
+                         'memory.c',
                           include_directories: global_inc)
 
 code_lib = static_library('code',
                           'code.c',
                            include_directories: global_inc,
                            link_with: mem_lib)
+
+frame_lib = static_library('frame',
+                           'frame.c',
+                            include_directories: global_inc,
+                            link_with: mem_lib)
 
 list_lib = static_library('list',
                           'listobject.c',
