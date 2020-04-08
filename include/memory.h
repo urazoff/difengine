@@ -1,6 +1,8 @@
 #ifndef _DF_MEMORY_H_
 #define _DF_MEMORY_H_
 
+#include "difengine.h"
+
 /**
  * @file
  * Memory allocation routine

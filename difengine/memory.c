@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include "difengine.h"
 #include "memory.h"
 
 void *
