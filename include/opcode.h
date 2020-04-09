@@ -12,8 +12,11 @@ extern "C" {
 
 typedef enum {
     RETURN_VALUE,
+    HAS_ARG,
     LOAD_CONST
 } Op_Codes;
+
+#define HAS_ARG(_opcode) (_opcode >= HAS_ARG)
 
 #ifdef __cplusplus
 }
