@@ -12,6 +12,10 @@ frame_lib = static_library('frame',
                             include_directories: global_inc,
                             link_with: mem_lib)
 
+eval_lib = static_library('evaluate',
+                          'evaluate.c',
+                           include_directories: global_inc)
+
 list_lib = static_library('list',
                           'listobject.c',
                            include_directories: global_inc,
