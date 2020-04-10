@@ -29,6 +29,13 @@
       "expectations": [
         "Success"
       ]
+    },
+    {
+      "exe": "evaluate",
+      "name": "Evaluate frame",
+      "expectations": [
+        "Success"
+      ]
     }
   ]
 }

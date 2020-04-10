@@ -1,9 +1,10 @@
 tests = [['code', ['code.c']],
          ['object', ['object.c']],
          ['list', ['list.c']],
-         ['frame', ['frame.c']]]
+         ['frame', ['frame.c']],
+         ['evaluate', ['evaluate.c']]]
 
 foreach t:tests
     exe = executable(t[0], t[1], include_directories: global_inc,
-                     link_with: [code_lib, frame_lib, dis_lib, list_lib, bytes_lib])
+                     link_with: [code_lib, frame_lib, dis_lib, list_lib, bytes_lib, eval_lib])
 endforeach
