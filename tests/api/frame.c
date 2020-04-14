@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     DfIntObj *const_obj = DF_MEM_ALLOC(sizeof(DfIntObj));
     int i;
 
-    code = df_code_obj_init();
+    code = df_code_obj_init(100);
     df_code_obj_add_op(code, RETURN_VALUE, 1);
 
     const_obj->val = 17;

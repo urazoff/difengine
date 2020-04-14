@@ -6,13 +6,14 @@
 #define RLE_LIMIT 255
 
 DfCodeObj*
-df_code_obj_init()
+df_code_obj_init(int stack_size)
 {
     DfCodeObj *code = DF_MEM_ALLOC(sizeof(DfCodeObj));
 
     code->opcodes = df_bytes_obj_init();
     code->consts = df_list_obj_init();
     code->lines = df_bytes_obj_init();
+    code->stack_size = stack_size;
 
     return code;
 }
@@ -135,9 +136,11 @@ df_code_obj_get_line(DfCodeObj *code, int op_index)
 void
 df_code_obj_clear(DfCodeObj *code)
 {
+    int stack_size = code->stack_size;
+
     df_bytes_obj_clear(code->opcodes);
     df_list_obj_clear(code->consts);
     df_bytes_obj_clear(code->lines);
     DF_MEM_FREE(code);
-    code = df_code_obj_init();
+    code = df_code_obj_init(stack_size);
 }

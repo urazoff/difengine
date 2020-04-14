@@ -20,6 +20,7 @@ typedef struct {
     DfBytesObj *opcodes; /* list of opcode bytes */
     DfListObj *consts;   /* list of any objects */
     DfBytesObj *lines;   /* list of opcodes lines */
+    int stack_size;      /* how big is a stack needed */
 } DfCodeObj;
 
 /**
@@ -28,7 +29,7 @@ typedef struct {
  * @return
  *   new&empty code object
  */
-extern DfCodeObj* df_code_obj_init();
+extern DfCodeObj* df_code_obj_init(int stack_size);
 
 /**
  * Add opcode to the code's opcodes list.
