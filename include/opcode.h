@@ -12,6 +12,11 @@ extern "C" {
 
 typedef enum {
     RETURN_VALUE,
+    UNARY_NEG,
+    BIN_ADD,
+    BIN_SUBTRACT,
+    BIN_MULTIPLY,
+    BIN_DIVIDE,
     HAS_ARG,
     LOAD_CONST
 } Op_Codes;
