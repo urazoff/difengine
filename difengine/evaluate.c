@@ -1,6 +1,7 @@
 #include "evaluate.h"
 #include "opcode.h"
 #include "intobject.h"
+#include "objectops.h"
 #include <stdio.h>
 
 #define PUSH(_value) \
@@ -16,6 +17,9 @@ df_eval_frame(DfFrameObj *frame)
 {
     DfCodeObj *code = frame->code;
     DfObject *ret_value = NULL; /* return value */
+    DfObject *a = NULL; /* binary operation's rigth operand */
+    DfObject *b = NULL; /* binary operation's left operand */
+
     uint8_t *instruction = code->opcodes->items; /* instruction to be executed */
     uint8_t opcode; /* current operation code */
     uint8_t oparg; /* current operation argument if any */
@@ -48,6 +52,16 @@ df_eval_frame(DfFrameObj *frame)
                 PUSH(constant);
                 break;
             }
+
+            case BIN_ADD:
+            {
+                b = POP();
+                a = POP();
+                ret_value = df_num_add(a, b);
+                PUSH(ret_value);
+                break;
+            }
+
             case RETURN_VALUE:
             {
                 ret_value = POP();
