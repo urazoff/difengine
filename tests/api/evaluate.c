@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
     df_code_obj_add_op(code, LOAD_CONST, 1);
     df_code_obj_add_op(code, i, 1);
 
+    df_code_obj_add_op(code, BIN_ADD, 2);
+
     df_code_obj_add_op(code, RETURN_VALUE, 2);
 
     frame = df_frame_obj_init(code);
