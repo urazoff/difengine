@@ -10,4 +10,6 @@
 #include <stddef.h>  
 #include <stdint.h>  
 
+#define DF_DEBUG
+
 #endif /* DF_DIFENGINE_H_ */
