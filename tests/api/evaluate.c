@@ -15,13 +15,17 @@ int main(int argc, char *argv[])
     int i;
 
     code = df_code_obj_init(100);
-    df_code_obj_add_op(code, RETURN_VALUE, 1);
 
     const_obj->val = 17;
     i =  df_code_obj_add_const(code, (DfObject *)const_obj);
 
-    df_code_obj_add_op(code, LOAD_CONST, 2);
-    df_code_obj_add_op(code, i, 2);
+    df_code_obj_add_op(code, LOAD_CONST, 1);
+    df_code_obj_add_op(code, i, 1);
+
+    df_code_obj_add_op(code, LOAD_CONST, 1);
+    df_code_obj_add_op(code, i, 1);
+
+    df_code_obj_add_op(code, RETURN_VALUE, 2);
 
     frame = df_frame_obj_init(code);
 
