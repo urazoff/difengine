@@ -18,6 +18,14 @@ typedef struct {
     int val;
 } DfIntObj;
 
+/**
+ * Create new integer object.
+ *
+ * @return
+ *   new integer object
+ */
+extern DfIntObj* df_int_obj_new(int val);
+
 #ifdef __cplusplus
 }
 #endif
