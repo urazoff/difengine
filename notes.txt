@@ -5,6 +5,21 @@ Internal design:
 1. Explicitly define what kind of object is field or function argument
    if it is not any object.
 
+Contributing:
+1. If patch is explicitly fixing something then it should contain
+   a fixline in a commit message. First type an alias command
+   ```git config alias.fixline "log -1 --abbrev=12
+      --format='Fixes: %h (\"%s\")%nCc: %ae'"```.
+   Then generate a fixline
+   ```git fixline <SHA>```.
+   And you will get something like following
+   ```
+   object: ops: fix pointer type
+
+   Fixes: 2653aae51867 ("object: add abstract object operations interface")
+   Cc: dilshod@difengine.xyz
+   ```
+
 TODO:
 Irrelevant:
 1. List objects: extend items vector. Define extension itself in /memory.
@@ -12,7 +27,7 @@ Irrelevant:
    May be do internal array of uints?
 3. Objects: make it possible to cast float and list to DfObject and vice versa.
 Relevant:
-4. Generalize/put to function common operations (i.e. init, cast, 
+4. Generalize/put to function common operations (i.e. init, cast,
    get list element and cast it to some specific object etc).
 5. Get rid of memory leak (always).
 6. Error handling.
