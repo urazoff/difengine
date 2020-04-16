@@ -53,11 +53,28 @@ df_eval_frame(DfFrameObj *frame)
                 break;
             }
 
+            case UNARY_NEG:
+            {
+                a = POP();
+                ret_value = df_num_negative(a);
+                PUSH(ret_value);
+                break;
+            }
+
             case BIN_ADD:
             {
                 b = POP();
                 a = POP();
                 ret_value = df_num_add(a, b);
+                PUSH(ret_value);
+                break;
+            }
+
+            case BIN_MULTIPLY:
+            {
+                b = POP();
+                a = POP();
+                ret_value = df_num_multiply(a, b);
                 PUSH(ret_value);
                 break;
             }

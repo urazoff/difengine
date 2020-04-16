@@ -11,13 +11,20 @@ int main(int argc, char *argv[])
 {
     DfCodeObj *code;
     DfFrameObj *frame;
-    DfIntObj *const_obj = DF_MEM_ALLOC(sizeof(DfIntObj));
+    DfIntObj *const_obj_a = DF_MEM_ALLOC(sizeof(DfIntObj));
+    DfIntObj *const_obj_b = DF_MEM_ALLOC(sizeof(DfIntObj));
     int i;
 
     code = df_code_obj_init(100);
 
-    const_obj->val = 17;
-    i =  df_code_obj_add_const(code, (DfObject *)const_obj);
+    const_obj_a->val = 17;
+    i =  df_code_obj_add_const(code, (DfObject *)const_obj_a);
+
+    df_code_obj_add_op(code, LOAD_CONST, 1);
+    df_code_obj_add_op(code, i, 1);
+
+    const_obj_b->val = 5;
+    i =  df_code_obj_add_const(code, (DfObject *)const_obj_b);
 
     df_code_obj_add_op(code, LOAD_CONST, 1);
     df_code_obj_add_op(code, i, 1);
@@ -26,6 +33,10 @@ int main(int argc, char *argv[])
     df_code_obj_add_op(code, i, 1);
 
     df_code_obj_add_op(code, BIN_ADD, 2);
+
+    df_code_obj_add_op(code, BIN_MULTIPLY, 2);
+
+    df_code_obj_add_op(code, UNARY_NEG, 2);
 
     df_code_obj_add_op(code, RETURN_VALUE, 2);
 
