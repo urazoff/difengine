@@ -37,8 +37,8 @@ typedef enum {
     STRING,
     NUMBER,
     /* utility tokens */
-    ERROR,
-    ENDOF
+    TERROR,
+    TENDOF
 } DfTokens;
 
 #ifdef __cplusplus
