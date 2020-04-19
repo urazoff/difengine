@@ -4,5 +4,6 @@ cc = meson.get_compiler('c')
 
 global_inc = include_directories('include')
 
+subdir('front')
 subdir('difengine')
 subdir('tests')
