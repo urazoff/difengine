@@ -6,7 +6,8 @@
  * @return
  *   token type
  */
-static int df_token_single(char c)
+static int
+df_token_single(char c)
 {
     switch (c)
     {
@@ -35,7 +36,8 @@ static int df_token_single(char c)
  * @return
  *   token type
  */
-static int df_token_two(char c1, char c2)
+static int
+df_token_two(char c1, char c2)
 {
 #define WITH_EQUAL(_token) \
     do {                              \
