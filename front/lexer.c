@@ -1,4 +1,6 @@
 #include "internal/tokens.h"
+#include "memory.h"
+#include "lexer.h"
 
 /**
  * Recognize single character token.
@@ -54,4 +56,18 @@ df_token_two(char c1, char c2)
     }
 
     return TERROR;
+}
+
+DfLexer*
+df_lexer_init()
+{
+    DfLexer *lexer = DF_MEM_ALLOC(sizeof(DfLexer));
+
+    lexer->buf = NULL;
+    lexer->cur = NULL;
+    lexer->start = NULL;
+    lexer->line = 0;
+    lexer->fp = NULL;
+
+    return lexer;
 }
