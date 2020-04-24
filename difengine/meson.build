@@ -40,3 +40,14 @@ bytes_lib = static_library('bytes',
 dis_lib = static_library('dis',
                          'dis.c',
                           include_directories: global_inc)
+
+df_libs += [
+            mem_lib,
+            code_lib,
+            frame_lib,
+            int_lib,
+            ops_lib,
+            eval_lib,
+            list_lib,
+            bytes_lib,
+            dis_lib]
