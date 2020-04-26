@@ -36,6 +36,13 @@
       "expectations": [
         "Success"
       ]
+    },
+    {
+      "exe": "lexer",
+      "name": "Lexer",
+      "expectations": [
+        "LPAREN", "IDENTIFIER", "PLUS", "TERROR", "RPAREN", "SEMICOLON", "TENDOF", "Success"
+      ]
     }
   ]
 }
