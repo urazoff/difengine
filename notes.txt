@@ -20,6 +20,18 @@ Contributing:
    Cc: dilshod@difengine.xyz
    ```
 
+Doc for contributors:
+1. Quick start:
+   - Clone repo
+   - Install meson build system
+   - $ cd difengine
+   - $ chmod a+x scripts/test_build_run.sh
+   - scripts/test_build_run.sh -v
+   What will happen:
+   - Difengine libs building
+   - Difengine tests building
+   - tests/api suite run
+
 TODO:
 Irrelevant:
 1. List objects: extend items vector. Define extension itself in /memory.
