@@ -2,6 +2,38 @@
 #include "memory.h"
 #include "lexer.h"
 
+const char * const DfTokenNames[] = {
+    "LPAREN",
+    "RPAREN",
+    "LBRACE",
+    "RBRACE",
+    "COMMA",
+    "DOT",
+    "MINUS",
+    "PLUS",
+    "SEMICOLON",
+    "SLASH",
+    "ASTERISK",
+    "GREATER",
+    "LESS",
+    "EQUAL",
+    "GREATEREQ",
+    "LESSEQ",
+    "EQUALEQ",
+    "NOTEQUAL",
+    "IDENTIFIER",
+    "STRING",
+    "NUMBER",
+    "TERROR",
+    "TENDOF"
+};
+
+char *
+df_lexer_token_name(int token)
+{
+    return (char *)DfTokenNames[token];
+}
+
 /**
  * Recognize single character token.
  *
@@ -70,4 +102,120 @@ df_lexer_init()
     lexer->fp = NULL;
 
     return lexer;
+}
+
+DfLexer*
+df_lexer_init_from_str(const char *str)
+{
+    DfLexer *lexer = df_lexer_init();
+
+    lexer->buf = lexer->cur = (char *)str;
+    lexer->start = str;
+    lexer->line = 1;
+
+    return lexer;
+}
+
+static char
+df_lexer_nextc(DfLexer *lexer)
+{
+    lexer->cur++;
+    return lexer->cur[-1];
+}
+
+static void
+df_lexer_back(DfLexer *lexer, char c)
+{
+    if (c != '\0')
+        lexer->cur--;
+}
+
+static void
+df_lexer_skip(DfLexer *lexer)
+{
+    char c;
+
+#define SKIP_CHAR() \
+    do {              \
+        lexer->cur++; \
+        continue;     \
+    } while (0)
+
+    for (;;)
+    {
+        c = *lexer->cur;
+
+        /* Skip spaces */
+        if (c == ' ' || c == '\t' || c == '\014')
+            SKIP_CHAR();
+        /* Skip comments. Comment ends when line ends. */
+        if (c == '#')
+        {
+            do {
+                SKIP_CHAR();
+                c = *lexer->cur;
+            } while (c != '\n');
+        }
+
+        return;
+    }
+#undef SKIP_CHAR
+}
+
+static int
+can_be_ident_start(char c)
+{
+    return (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+            c == '_';
+}
+
+static int
+can_be_ident_char(char c)
+{
+    return (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') ||
+            c == '_';
+}
+
+static int
+is_digit(char c)
+{
+    return c >= '0' && c <= '9';
+}
+
+int
+df_lexer_get(DfLexer *lexer, const char **start, const char **end)
+{
+    char c;
+
+    *start = *end = NULL;
+    lexer->start = lexer->cur;
+
+    /* Skip spaces and comments */
+    df_lexer_skip(lexer);
+
+    c = df_lexer_nextc(lexer);
+
+    if (c == '\0')
+        return TENDOF;
+
+    /* Handle identifier */
+    if (can_be_ident_start(c))
+    {
+        while(can_be_ident_char(c))
+            c = df_lexer_nextc(lexer);
+
+        df_lexer_back(lexer, c);
+        *start = lexer->start;
+        *end = lexer->cur;
+
+        return IDENTIFIER;
+    }
+
+    /* Punctuation character */
+    *start = lexer->start;
+    *end = lexer->cur;
+    return df_token_single(c);
 }

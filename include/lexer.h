@@ -21,12 +21,36 @@ typedef struct {
 } DfLexer;
 
 /**
- * Allocate new frame object and initialize it.
+ * Get token name.
  *
  * @return
- *   new frame object
+ *   token name
+ */
+extern char* df_lexer_token_name(int token);
+
+/**
+ * Allocate new lexer state struct and initialize it.
+ *
+ * @return
+ *   new&empty lexer state struct
  */
 extern DfLexer* df_lexer_init();
+
+/**
+ * Create and set up lexer for string processing.
+ *
+ * @return
+ *   new lexer state struct
+ */
+extern DfLexer* df_lexer_init_from_str(const char *str);
+
+/**
+ * Get next token from lexer
+ *
+ * @return
+ *   next token
+ */
+extern int df_lexer_get(DfLexer *lexer, const char **start, const char **end);
 
 #ifdef __cplusplus
 }
