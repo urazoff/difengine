@@ -214,6 +214,27 @@ df_lexer_get(DfLexer *lexer, const char **start, const char **end)
         return IDENTIFIER;
     }
 
+    /* Handle number */
+    if (is_digit(c))
+    {
+        do {
+            c = df_lexer_nextc(lexer);
+        } while (is_digit(c));
+
+        if (c == '.')
+        {
+            do {
+                c = df_lexer_nextc(lexer);
+            } while (is_digit(c));
+        }
+
+        df_lexer_back(lexer, c);
+        *start = lexer->start;
+        *end = lexer->cur;
+
+        return NUMBER;
+    }
+
     /* Punctuation character */
     *start = lexer->start;
     *end = lexer->cur;

@@ -41,7 +41,7 @@
       "exe": "lexer",
       "name": "Lexer",
       "expectations": [
-        "LPAREN", "IDENTIFIER", "PLUS", "TERROR", "RPAREN", "SEMICOLON", "TENDOF", "Success"
+        "LPAREN", "IDENTIFIER", "PLUS", "NUMBER", "RPAREN", "SEMICOLON", "TENDOF", "Success"
       ]
     }
   ]

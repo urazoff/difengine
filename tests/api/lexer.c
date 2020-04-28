@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-    DfLexer *lexer = df_lexer_init_from_str("(x + 1);");
+    DfLexer *lexer = df_lexer_init_from_str("(x + 3.1415);");
     const char *start = NULL;
     const char *end = NULL;
     int token;
