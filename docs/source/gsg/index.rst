@@ -4,6 +4,7 @@ Getting Started
 **Quick start:**
 
 Let's get sources and tools first:
+
 *   Install meson build system
 *   Clone repo
 
