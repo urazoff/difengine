@@ -4,18 +4,19 @@
 
 int main(int argc, char *argv[])
 {
-    DfLexer *lexer = df_lexer_init_from_str("(x + 3.1415);");
+    const char *inp_str = "x + 3.1415; print(\'Hello\')";
+    DfLexer *lexer = df_lexer_init_from_str(inp_str);
     const char *start = NULL;
     const char *end = NULL;
     int token;
 
-    printf("expr: \"(x+1);\"\n");
+    printf("expr: %s;\n", inp_str);
     for (;;)
     {
         token = df_lexer_get(lexer, &start, &end);
         printf("RES: %s\n", df_lexer_token_name(token));
 
-        if (token == TENDOF)
+        if (token == TENDOF || token == TERROR)
             break;
     }
 

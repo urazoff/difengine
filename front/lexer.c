@@ -124,10 +124,9 @@ df_lexer_nextc(DfLexer *lexer)
 }
 
 static void
-df_lexer_back(DfLexer *lexer, char c)
+df_lexer_back(DfLexer *lexer)
 {
-    if (c != '\0')
-        lexer->cur--;
+    lexer->cur--;
 }
 
 static void
@@ -144,6 +143,13 @@ df_lexer_skip(DfLexer *lexer)
     for (;;)
     {
         c = *lexer->cur;
+
+        /* Encounter new line */
+        if (c == '\n')
+        {
+            lexer->line++;
+            SKIP_CHAR();
+        }
 
         /* Skip spaces */
         if (c == ' ' || c == '\t' || c == '\014')
@@ -207,7 +213,7 @@ df_lexer_get(DfLexer *lexer, const char **start, const char **end)
         while(can_be_ident_char(c))
             c = df_lexer_nextc(lexer);
 
-        df_lexer_back(lexer, c);
+        df_lexer_back(lexer);
         *start = lexer->start;
         *end = lexer->cur;
 
@@ -228,11 +234,28 @@ df_lexer_get(DfLexer *lexer, const char **start, const char **end)
             } while (is_digit(c));
         }
 
-        df_lexer_back(lexer, c);
+        df_lexer_back(lexer);
         *start = lexer->start;
         *end = lexer->cur;
 
         return NUMBER;
+    }
+
+    /* Handle string */
+    if (c == '\'' || c == '"')
+    {
+        char quote = c;
+        do {
+            c = df_lexer_nextc(lexer);
+        } while (c != quote && c != '\0');
+
+        if (c == '\0')
+            return TERROR;
+
+        *start = lexer->start;
+        *end = lexer->cur;
+
+        return STRING;
     }
 
     /* Punctuation character */
