@@ -137,7 +137,6 @@ df_lexer_skip(DfLexer *lexer)
 #define SKIP_CHAR() \
     do {              \
         lexer->cur++; \
-        continue;     \
     } while (0)
 
     for (;;)
@@ -149,11 +148,16 @@ df_lexer_skip(DfLexer *lexer)
         {
             lexer->line++;
             SKIP_CHAR();
+            continue;
         }
 
         /* Skip spaces */
         if (c == ' ' || c == '\t' || c == '\014')
+        {
             SKIP_CHAR();
+            continue;
+        }
+
         /* Skip comments. Comment ends when line ends. */
         if (c == '#')
         {
@@ -161,6 +165,7 @@ df_lexer_skip(DfLexer *lexer)
                 SKIP_CHAR();
                 c = *lexer->cur;
             } while (c != '\n');
+            continue;
         }
 
         return;
