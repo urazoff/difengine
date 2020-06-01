@@ -59,9 +59,9 @@ master_doc = 'index'
 
 import subprocess
 
-doxyfile = 'api/Doxyfile'
-cmd = 'cd ..; doxygen ' + doxyfile
+doxyfile = 'docs/api/Doxyfile'
+cmd = 'cd ../..; doxygen ' + doxyfile
 
 subprocess.call(cmd, shell=True)
 
-html_extra_path = ['../docs/api/gendocs/html']
+html_extra_path = ['docs/api/gendocs/html']
