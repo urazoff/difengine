@@ -54,3 +54,14 @@ html_theme = 'alabaster'
 html_static_path = ['_static']
 
 master_doc = 'index'
+
+# -- Doxygen -----------------------------------------------------------------
+
+import subprocess
+
+doxyfile = 'api/Doxyfile'
+cmd = 'cd ..; doxygen ' + doxyfile
+
+subprocess.call(cmd, shell=True)
+
+html_extra_path = ['../docs/api/gendocs/html']
