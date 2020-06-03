@@ -200,6 +200,8 @@ int
 df_lexer_get(DfLexer *lexer, const char **start, const char **end)
 {
     char c;
+    char c2;
+    int token;
 
     *start = *end = NULL;
     lexer->start = lexer->cur;
@@ -262,6 +264,15 @@ df_lexer_get(DfLexer *lexer, const char **start, const char **end)
 
         return STRING;
     }
+
+    /* Two-character token */
+    c2 = df_lexer_nextc(lexer);
+    token = df_token_two(c, c2);
+    if (token != TERROR)
+    {
+        return token;
+    }
+    df_lexer_back(lexer);
 
     /* Punctuation character */
     *start = lexer->start;

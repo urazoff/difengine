@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-    const char *inp_str = "x + 3.1415; print(\'Hello\')";
+    const char *inp_str = "if (x != y) y = x + 3.1415; print(\'Hello\')";
     DfLexer *lexer = df_lexer_init_from_str(inp_str);
     const char *start = NULL;
     const char *end = NULL;
