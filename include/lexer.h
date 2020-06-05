@@ -37,6 +37,11 @@ extern char* df_lexer_token_name(int token);
 extern DfLexer* df_lexer_init();
 
 /**
+ * Free lexer.
+ */
+extern void df_lexer_free(DfLexer *lexer);
+
+/**
  * Create and set up lexer for string processing.
  *
  * @return

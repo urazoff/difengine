@@ -104,6 +104,15 @@ df_lexer_init()
     return lexer;
 }
 
+void
+df_lexer_free(DfLexer *lexer)
+{
+    if (lexer->fp != NULL && lexer->buf != NULL)
+        DF_MEM_FREE(lexer->buf);
+
+    DF_MEM_FREE(lexer);
+}
+
 DfLexer*
 df_lexer_init_from_str(const char *str)
 {

@@ -20,6 +20,8 @@ int main(int argc, char *argv[])
             break;
     }
 
+    df_lexer_free(lexer);
+
     printf("RES: Success\n");
 
     return 0;
