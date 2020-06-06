@@ -125,6 +125,27 @@ df_lexer_init_from_str(const char *str)
     return lexer;
 }
 
+DfLexer*
+df_lexer_init_from_file(FILE *fp)
+{
+    DfLexer *lexer = df_lexer_init();
+
+    if (lexer == NULL)
+        return NULL;
+
+    lexer->buf = (char *)DF_MEM_ALLOC(BUFSIZ);
+    if (lexer->buf == NULL)
+    {
+        df_lexer_free(lexer);
+        return NULL;
+    }
+
+    lexer->cur = lexer->buf;
+    lexer->fp = fp;
+
+    return lexer;
+}
+
 static char
 df_lexer_nextc(DfLexer *lexer)
 {

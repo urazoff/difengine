@@ -50,6 +50,14 @@ extern void df_lexer_free(DfLexer *lexer);
 extern DfLexer* df_lexer_init_from_str(const char *str);
 
 /**
+ * Create and set up lexer for file processing.
+ *
+ * @return
+ *   new lexer state struct
+ */
+extern DfLexer* df_lexer_init_from_file(FILE *fp);
+
+/**
  * Get next token from lexer
  *
  * @return
