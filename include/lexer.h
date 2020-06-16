@@ -20,6 +20,11 @@ typedef struct {
     FILE *fp;          /* source code file if any*/
 } DfLexer;
 
+typedef struct {
+    char *str;   /* keyword itself */
+    int token;   /* corresponding token type, see internal/tokens.h */
+} DfKeyWord;
+
 /**
  * Get token name.
  *

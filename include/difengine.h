@@ -6,9 +6,10 @@
  * Meta-include header file
  */
 
-#include <stdbool.h> 
-#include <stddef.h>  
-#include <stdint.h>  
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 #include <stdio.h>
 
 #define DF_DEBUG

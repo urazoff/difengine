@@ -36,6 +36,22 @@ typedef enum {
     IDENTIFIER,
     STRING,
     NUMBER,
+    /* reserved keywords */
+    K_IF,
+    K_OR,
+    K_IN,
+    K_AND,
+    K_NOT,
+    K_FOR,
+    K_DEF,
+    K_NULL,
+    K_TRUE,
+    K_FALSE,
+    K_WHILE,
+    K_BREAK,
+    K_CLASS,
+    K_RETURN,
+    K_CONTINUE,
     /* utility tokens */
     TERROR,
     TENDOF

@@ -24,8 +24,63 @@ const char * const DfTokenNames[] = {
     "IDENTIFIER",
     "STRING",
     "NUMBER",
+    "K_IF",
+    "K_OR",
+    "K_IN",
+    "K_AND",
+    "K_NOT",
+    "K_FOR",
+    "K_DEF",
+    "K_NULL",
+    "K_TRUE",
+    "K_FALSE",
+    "K_WHILE",
+    "K_BREAK",
+    "K_CLASS",
+    "K_RETURN",
+    "K_CONTINUE",
     "TERROR",
     "TENDOF"
+};
+
+static int max_keyword_len = 8;
+static DfKeyWord *keywords[] = {
+    NULL,
+    NULL,
+    (DfKeyWord[]) {
+        {"if", K_IF},
+        {"or", K_OR},
+        {"in", K_IN},
+        {NULL, -1}
+    },
+    (DfKeyWord[]) {
+        {"and", K_AND},
+        {"not", K_NOT},
+        {"for", K_FOR},
+        {"def", K_DEF},
+        {NULL, -1}
+    },
+    (DfKeyWord[]) {
+        {"Null", K_NULL},
+        {"True", K_TRUE},
+        {NULL, -1}
+    },
+    (DfKeyWord[]) {
+        {"False", K_FALSE},
+        {"while", K_WHILE},
+        {"break", K_BREAK},
+        {"class", K_CLASS},
+        {NULL, -1}
+    },
+    (DfKeyWord[]) {
+        {"return", K_RETURN},
+        {NULL, -1}
+    },
+    NULL,
+    (DfKeyWord[]) {
+        {"continue", K_CONTINUE},
+        {NULL, -1}
+    }
 };
 
 char *
@@ -182,7 +237,7 @@ df_lexer_skip(DfLexer *lexer)
         }
 
         /* Skip spaces */
-        if (c == ' ' || c == '\t' || c == '\014')
+        if (c == ' ' || c == '\r' || c == '\t' || c == '\014')
         {
             SKIP_CHAR();
             continue;
@@ -226,6 +281,22 @@ is_digit(char c)
     return c >= '0' && c <= '9';
 }
 
+static int
+tok_if_keyword(const char *ident, int len)
+{
+    /* can be a keyword? */
+    if (keywords[len] == NULL || len > max_keyword_len)
+        return IDENTIFIER;
+
+    for (DfKeyWord *keyword = keywords[len]; keyword->token != -1; keyword++)
+    {
+        if (strncmp(keyword->str, ident, len) == 0)
+            return keyword->token;
+    }
+
+    return IDENTIFIER;
+}
+
 int
 df_lexer_get(DfLexer *lexer, const char **start, const char **end)
 {
@@ -234,10 +305,10 @@ df_lexer_get(DfLexer *lexer, const char **start, const char **end)
     int token;
 
     *start = *end = NULL;
-    lexer->start = lexer->cur;
 
     /* Skip spaces and comments */
     df_lexer_skip(lexer);
+    lexer->start = lexer->cur;
 
     c = df_lexer_nextc(lexer);
 
@@ -254,7 +325,7 @@ df_lexer_get(DfLexer *lexer, const char **start, const char **end)
         *start = lexer->start;
         *end = lexer->cur;
 
-        return IDENTIFIER;
+        return tok_if_keyword(*start, (int)(*end - *start));
     }
 
     /* Handle number */

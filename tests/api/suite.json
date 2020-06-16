@@ -41,7 +41,8 @@
       "exe": "lexer",
       "name": "Lexer",
       "expectations": [
-        "IDENTIFIER", "LPAREN", "IDENTIFIER", "NOTEQUAL", "IDENTIFIER", "RPAREN",
+        "K_IF", "LPAREN", "IDENTIFIER", "NOTEQUAL", "IDENTIFIER", "RPAREN",
+        "K_WHILE", "LPAREN", "IDENTIFIER", "LESS", "NUMBER", "RPAREN",
         "IDENTIFIER", "EQUAL", "IDENTIFIER", "PLUS", "NUMBER", "SEMICOLON",
         "IDENTIFIER", "LPAREN", "STRING", "RPAREN", "TENDOF", "Success"
       ]
