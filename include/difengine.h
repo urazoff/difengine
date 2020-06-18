@@ -1,5 +1,5 @@
-#ifndef _DF_DEFINES_H_
-#define _DF_DEFINES_H_
+#ifndef _DF_DIFENGINE_H_
+#define _DF_DIFENGINE_H_
 
 /**
  * @file
