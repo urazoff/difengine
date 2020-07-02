@@ -18,6 +18,7 @@ typedef struct {
     const char *start; /* start of an lexeme */
     int line;          /* current line number */
     FILE *fp;          /* source code file if any*/
+    int error;         /* error code */
 } DfLexer;
 
 /**
