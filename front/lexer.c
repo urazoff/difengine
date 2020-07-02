@@ -1,6 +1,7 @@
 #include "internal/tokens.h"
 #include "memory.h"
 #include "lexer.h"
+#include "dferror.h"
 
 const char * const DfTokenNames[] = {
     "LPAREN",
@@ -155,6 +156,7 @@ df_lexer_init()
     lexer->start = NULL;
     lexer->line = 0;
     lexer->fp = NULL;
+    lexer->error = 0;
 
     return lexer;
 }
@@ -358,7 +360,10 @@ df_lexer_get(DfLexer *lexer, const char **start, const char **end)
         } while (c != quote && c != '\0');
 
         if (c == '\0')
+        {
+            lexer->error = ESTRING;
             return TERROR;
+        }
 
         *start = lexer->start;
         *end = lexer->cur;

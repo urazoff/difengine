@@ -10,7 +10,9 @@
 extern "C" {
 #endif
 
+/* Lexer errors */
 #define ETOKEN    10 /* Invalid token */
+#define ESTRING   11 /* Error in string */
 
 #ifdef __cplusplus
 }
