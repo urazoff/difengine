@@ -12,6 +12,18 @@
 extern "C" {
 #endif
 
+typedef struct {
+    int type;
+    const char *start;
+    ssize_t length;
+    ssize_t line;
+} DfToken;
+
+typedef struct {
+    char *str;   /* keyword itself */
+    int token;   /* corresponding token type, see internal/tokens.h */
+} DfKeyWord;
+
 typedef enum {
     /* character tokens */
     LPAREN,
