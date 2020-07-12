@@ -3,7 +3,8 @@ tests = [['code', ['code.c']],
          ['list', ['list.c']],
          ['frame', ['frame.c']],
          ['evaluate', ['evaluate.c']],
-         ['lexer', ['lexer.c']]]
+         ['lexer', ['lexer.c']],
+         ['parser', ['parser.c']]]
 
 foreach t:tests
     exe = executable(t[0], t[1], include_directories: global_inc,

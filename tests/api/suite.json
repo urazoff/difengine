@@ -46,6 +46,13 @@
         "IDENTIFIER", "EQUAL", "IDENTIFIER", "PLUS", "NUMBER", "SEMICOLON",
         "IDENTIFIER", "LPAREN", "STRING", "RPAREN", "TENDOF", "Success"
       ]
+    },
+    {
+      "exe": "parser",
+      "name": "Parser",
+      "expectations": [
+        "Success"
+      ]
     }
   ]
 }
