@@ -26,6 +26,7 @@ def main(args):
             suite = json.load(suite_file)
             execs = args.build_dir + "/tests/" + suite["id"] + "/";
             print("Run", suite["suite_name"], "suite")
+            summary = []
             for t in suite["tests"]:
                 result = []
                 print("Run", t["name"], "test...")
@@ -43,12 +44,14 @@ def main(args):
                             info(line[:-1])
 
                 if result == t['expectations']:
+                    summary.append(1)
                     passed("PASS")
                     if args.verbose:
                         for r in result:
                             info(r)
 
                 else:
+                    summary.append(0)
                     if args.verbose:
                         failed("FAIL: Obtained result")
                         for r in result:
@@ -59,6 +62,10 @@ def main(args):
                             info(e)
                     else:
                         failed("FAIL")
+
+            print("------------------\nSummary:")
+            print("Passed", sum(summary), "tests out of",
+                  len(summary), "in", suite["suite_name"])
     else:
         print("No suite file. Check the suite_dir passed.")
         sys.exit()
