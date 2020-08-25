@@ -32,6 +32,9 @@ typedef struct df_object
     DfType *type;
 } DfObject;
 
+#define DF_INC_RF(obj) ((obj)->rfcnt++)
+#define DF_DEC_RF(obj) ((obj)->rfcnt--)
+
 typedef struct df_container
 {
     DfObject_CONT_HEAD;
@@ -39,10 +42,12 @@ typedef struct df_container
 
 typedef DfObject* (*unaryop)(DfObject*);
 typedef DfObject* (*binaryop)(DfObject*, DfObject*);
+typedef DfObject* (*ternaryop)(DfObject*, DfObject*);
+typedef void (*voidunaryop)(DfObject*);
 typedef int (*intunaryop)(DfObject*);
 typedef int (*intbinaryop)(DfObject*, DfObject*);
 typedef int (*intternaryop)(DfObject*, DfObject*, DfObject*);
-typedef long (*hashop)(DfObject*);
+typedef uint32_t (*hashop)(DfObject*);
 typedef DfObject* (*getter)(DfObject*, char*);
 typedef int (*setter)(DfObject*, DfObject*, char*);
 
@@ -66,7 +71,8 @@ typedef struct
 typedef struct
 {
     binaryop find;
-    intternaryop insert;
+    intbinaryop del;
+    ternaryop insert;
 } DfAssContOps;
 
 typedef struct df_type
@@ -75,7 +81,7 @@ typedef struct df_type
     int size; /* size of an object of this type*/
     int item_size; /* size of an item of an object of this type */
 
-    intunaryop destroy;
+    voidunaryop destroy;
     hashop hash;
     intunaryop print;
     intbinaryop compare;
@@ -88,20 +94,45 @@ typedef struct df_type
 } DfType;
 
 /**
- * Allocate new list object and initialize it.
+ * Allocate new object of given type.
  *
  * @return
- *   new&empty list object
+ *   new object of given type
  */
 extern DfObject *df_obj_new(DfType *type);
 
 /**
- * Allocate new list object and initialize it.
+ * Allocate new container object of given type and size.
  *
  * @return
- *   new&empty list object
+ *   new & empty container object of given size and type
  */
 extern DfObject *df_obj_new_cont(DfType *type, int size);
+
+/**
+ * Calculate hash code of an object
+ *
+ * @return
+ *   hash code of an object
+ */
+extern uint32_t df_obj_hash(DfObject *obj);
+
+/**
+ * Compare two objects
+ *
+ * @return
+ *   0 if obj(a) == obj(b), -1 if obj(a) < obj(b), 1 if obj(a) > obj(b)
+ */
+extern int df_obj_compare(DfObject *a, DfObject *b);
+
+/**
+ * Print string representation of an object to stdout.
+ * Let's keep it simple for now.
+ *
+ * @return
+ *   error code
+ */
+extern int df_obj_print(DfObject *obj);
 
 #ifdef __cplusplus
 }

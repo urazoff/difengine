@@ -2,7 +2,7 @@ mem_lib = static_library('memory',
                          'memory.c',
                           include_directories: global_inc)
 
-mem_lib = static_library('object',
+obj_lib = static_library('object',
                          'object.c',
                           include_directories: global_inc,
                           link_with: mem_lib)
@@ -48,6 +48,7 @@ dis_lib = static_library('dis',
 
 df_libs += [
             mem_lib,
+            obj_lib,
             code_lib,
             frame_lib,
             int_lib,

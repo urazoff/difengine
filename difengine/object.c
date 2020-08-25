@@ -34,3 +34,41 @@ df_obj_new_cont(DfType *type, int size)
 
     return (DfObject *)cont;
 }
+
+uint32_t
+df_obj_hash(DfObject *obj)
+{
+    if (obj->type->hash != NULL)
+        return (*obj->type->hash)(obj);
+
+    return 0;
+}
+
+int
+df_obj_compare(DfObject *a, DfObject *b)
+{
+    if (a->type == b->type)
+        return (*a->type->compare)(a, b);
+
+    /* TODO: handle error there and everywhere else */
+    return -1;
+}
+
+int
+df_obj_print(DfObject *obj)
+{
+    if (obj == NULL)
+    {
+        printf("df object: Null\n");
+    }
+    else if (obj->type->print != NULL)
+    {
+        return (*obj->type->print)(obj);
+    }
+    else
+    {
+        printf("df object: %s at %p\n", obj->type->name, obj);
+    }
+
+    return 0;
+}
