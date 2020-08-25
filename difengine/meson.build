@@ -12,6 +12,11 @@ str_lib = static_library('string',
                           include_directories: global_inc,
                           link_with: [mem_lib, obj_lib])
 
+hash_lib = static_library('hash',
+                          'hashobject.c',
+                           include_directories: global_inc,
+                           link_with: [mem_lib, obj_lib, str_lib])
+
 code_lib = static_library('code',
                           'code.c',
                            include_directories: global_inc,
@@ -55,6 +60,7 @@ df_libs += [
             mem_lib,
             obj_lib,
             str_lib,
+            hash_lib,
             code_lib,
             frame_lib,
             int_lib,

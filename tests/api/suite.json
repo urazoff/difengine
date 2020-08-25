@@ -53,6 +53,13 @@
       "expectations": [
         "Success"
       ]
+    },
+    {
+      "exe": "hash",
+      "name": "Hash table object",
+      "expectations": [
+        "Success"
+      ]
     }
   ]
 }
