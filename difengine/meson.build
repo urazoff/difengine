@@ -7,6 +7,11 @@ obj_lib = static_library('object',
                           include_directories: global_inc,
                           link_with: mem_lib)
 
+str_lib = static_library('string',
+                         'stringobject.c',
+                          include_directories: global_inc,
+                          link_with: [mem_lib, obj_lib])
+
 code_lib = static_library('code',
                           'code.c',
                            include_directories: global_inc,
@@ -49,6 +54,7 @@ dis_lib = static_library('dis',
 df_libs += [
             mem_lib,
             obj_lib,
+            str_lib,
             code_lib,
             frame_lib,
             int_lib,
