@@ -1,5 +1,5 @@
-#ifndef _DF_LISTOBJECT_H_
-#define _DF_LISTOBJECT_H_
+#ifndef _DF_HASHOBJECT_H_
+#define _DF_HASHOBJECT_H_
 
 #include "difengine.h"
 #include "object.h"
@@ -67,4 +67,4 @@ extern int df_hash_obj_delete(DfObject *ht, DfObject *key);
 }
 #endif
 
-#endif /* DF_LISTOBJECT_H_ */
+#endif /* DF_HASHOBJECT_H_ */
