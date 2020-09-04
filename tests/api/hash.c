@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 
     ret_p = df_hash_obj_insert(ht, (DfObject *)str1, (DfObject *)str2);
     ret_val = df_obj_print(ret_p);
+    ret_val = df_obj_print(ht);
 
     ret_p = df_hash_obj_get(ht, (DfObject *)str1);
     ret_val = df_obj_print(ret_p);
