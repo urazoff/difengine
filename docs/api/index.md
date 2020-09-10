@@ -6,6 +6,6 @@ mainly purposed for fast & easy computation and equation solving.
 
 Here you can find API reference.
 
-Also see [guides.](https://docs.difengine.xyz/en/latest/master.html)
+Also see [guides.](https://doc.difengine.com/en/latest/master.html)
 
 Any questions: dilshod@difengine.xyz
