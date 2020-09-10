@@ -8,4 +8,4 @@ Here you can find API reference.
 
 Also see [guides.](https://doc.difengine.com/en/latest/master.html)
 
-Any questions: dilshod@difengine.xyz
+Any questions: dilshod@difengine.com
