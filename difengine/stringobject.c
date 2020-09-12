@@ -54,7 +54,7 @@ df_str_obj_from_str(char *chars)
 static int
 str_print(DfStrObj *str)
 {
-    printf("%s\n", str->chars);
+    printf("%s", str->chars);
     return 0;
 }
 
