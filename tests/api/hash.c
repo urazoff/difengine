@@ -11,22 +11,22 @@ int main(int argc, char *argv[])
     DfStrObj *str2 = df_str_obj_from_str("string #2");
     DfObject *ht = df_hash_obj_init();
 
-    ret_val = df_obj_print((DfObject *)str1);
+    ret_val = df_obj_print((DfObject *)str1, 1);
     printf("%u\n", str1->hash);
 
-    ret_val = df_obj_print((DfObject *)str2);
+    ret_val = df_obj_print((DfObject *)str2, 1);
     printf("%u\n", str2->hash);
 
     ret_p = df_hash_obj_insert(ht, (DfObject *)str1, (DfObject *)str2);
-    ret_val = df_obj_print(ret_p);
-    ret_val = df_obj_print(ht);
+    ret_val = df_obj_print(ret_p, 1);
+    ret_val = df_obj_print(ht, 1);
 
     ret_p = df_hash_obj_get(ht, (DfObject *)str1);
-    ret_val = df_obj_print(ret_p);
+    ret_val = df_obj_print(ret_p, 1);
 
     ret_val = df_hash_obj_delete(ht, (DfObject *)str1);
     ret_p = df_hash_obj_get(ht, (DfObject *)str1);
-    ret_val = df_obj_print(ret_p);
+    ret_val = df_obj_print(ret_p, 1);
 
     UNUSED(ret_val);
 

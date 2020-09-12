@@ -55,20 +55,30 @@ df_obj_compare(DfObject *a, DfObject *b)
 }
 
 int
-df_obj_print(DfObject *obj)
+df_obj_print(DfObject *obj, int flags)
 {
+    int ret_val;
+
     if (obj == NULL)
     {
-        printf("df object: Null\n");
+        printf("df object: Null");
     }
     else if (obj->type->print != NULL)
     {
-        return (*obj->type->print)(obj);
+        ret_val = (*obj->type->print)(obj);
+
+        if (ret_val == 0 && flags == 1)
+            printf("\n");
+
+        return ret_val;
     }
     else
     {
-        printf("df object: %s at %p\n", obj->type->name, obj);
+        printf("df object: %s at %p", obj->type->name, obj);
     }
+
+    if (flags == 1)
+        printf("\n");
 
     return 0;
 }

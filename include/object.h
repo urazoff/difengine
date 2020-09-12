@@ -127,12 +127,13 @@ extern int df_obj_compare(DfObject *a, DfObject *b);
 
 /**
  * Print string representation of an object to stdout.
- * Let's keep it simple for now.
+ * Flags are now just one flag whether to put newline or not.
+ * Use flags = 1 to get newline.
  *
  * @return
  *   error code
  */
-extern int df_obj_print(DfObject *obj);
+extern int df_obj_print(DfObject *obj, int flags);
 
 #ifdef __cplusplus
 }
