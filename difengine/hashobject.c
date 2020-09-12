@@ -273,6 +273,36 @@ df_hash_obj_delete(DfObject *ht, DfObject *key)
     return 0;
 }
 
+static int
+hash_print(DfHashObj *ht)
+{
+    int comma = 0;
+    int i;
+    DfHashEntry *e;
+
+    printf("{");
+    for (i = 0, e = ht->entries; i < ht->size; i++, e++)
+    {
+        if (is_present(e))
+        {
+            if (comma > 0)
+                printf(", ");
+
+            if (df_obj_print(e->key, 0) != 0)
+                return -1;
+
+            printf(" : ");
+
+            if (df_obj_print(e->value, 0) != 0)
+                return -1;
+
+            comma++;
+        }
+    }
+    printf("}");
+    return 0;
+}
+
 /* How many entries with no bogus neither NULL keys? */
 static int
 hash_length(DfHashObj *ht)
@@ -317,7 +347,7 @@ DfType DfHashType = {
     0,
     (voidunaryop)hash_destroy,
     NULL,
-    NULL, /* TODO: (intunaryop)hash_print */
+    (intunaryop)hash_print,
     NULL, /* TODO: (intbinaryop)hash_compare */
     NULL, /* TODO: (getter)hash_get */
     NULL,
