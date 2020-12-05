@@ -8,6 +8,7 @@ const char * const NodeTypes[] = {
     "MULTIPLY",
     "GREATER",
     "LESS",
+    "EQUAL",
     "GREATEREQ",
     "LESSEQ",
     "EQUALEQ",

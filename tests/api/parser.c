@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     DfTree *x = NULL;
-    const char *inp_str = "(-12 + 2)*val - 31/2 + \"str\"";
+    const char *inp_str = "val = (-12 + 2)*val - 31/2 + \"str\"";
 
     printf("expr: %s;\n", inp_str);
     DfLexer *lexer = df_lexer_init_from_str(inp_str);

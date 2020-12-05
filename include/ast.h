@@ -19,6 +19,7 @@ typedef enum {
     N_MULTIPLY,
     N_GREATER,
     N_LESS,
+    N_EQUAL,
     N_GREATEREQ,
     N_LESSEQ,
     N_EQUALEQ,
