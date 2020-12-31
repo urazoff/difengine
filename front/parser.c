@@ -88,7 +88,7 @@ DfParseRule parse_rules[] = {
   { NULL, binary_rule, P_FACTOR, N_MULTIPLY},
   { NULL, NULL, P_NONE, -1},
   { NULL, NULL, P_NONE, -1},
-  { unary_rule, binary_rule, P_ASSIGNMENT, N_EQUAL},
+  { NULL, binary_rule, P_ASSIGNMENT, N_EQUAL},
   { NULL, NULL, P_NONE, -1},
   { NULL, NULL, P_NONE, -1},
   { NULL, NULL, P_NONE, -1},
@@ -203,7 +203,7 @@ grouping_rule(DfParser *parser)
 {
     DfTree *x = NULL;
 
-    x = df_parser_precedence(parser, P_ASSIGNMENT);
+    x = df_parser_precedence(parser, P_OR);
     df_parser_expect(parser, RPAREN, "')' after expression");
 
     return x;
