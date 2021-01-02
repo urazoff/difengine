@@ -2,37 +2,43 @@
 #include "listobject.h"
 #include "memory.h"
 
-DfListObj*
+DfObject*
 df_list_obj_init()
 {
-    DfListObj *list = DF_MEM_ALLOC(sizeof(DfListObj));
+    DfListObj *list = (DfListObj *)df_obj_new(&DfListType);
+
+    if (list == NULL)
+        return NULL;
 
     list->items = NULL;
     list->count= 0;
     list->capacity = 0;
     list->overallocate = 0;
 
-    return list;
+    return (DfObject *)list;
 }
 
 void
-df_list_obj_extend(DfListObj *list, DfObject *item)
+df_list_obj_extend(DfObject *list, DfObject *item)
 {
-    if (list->capacity < list->count + 1)
+    DfListObj *listp = (DfListObj *)list;
+
+    if (listp->capacity < listp->count + 1)
     {
-        int old_capacity = list->capacity;
+        int old_capacity = listp->capacity;
 
-        if (list->overallocate != 0)
-            list->capacity = CONT_UPD_CAPACITY(old_capacity);
+        if (listp->overallocate != 0)
+            listp->capacity = CONT_UPD_CAPACITY(old_capacity);
         else
-            list->capacity++;
+            listp->capacity++;
 
-        list->items = DF_MEM_GROW_ARRAY(DfObject *, list->items,
-                                        old_capacity, list->capacity);
+        listp->items = DF_MEM_GROW_ARRAY(DfObject *, listp->items,
+                                         old_capacity, listp->capacity);
     }
 
-    list->items[list->count] = item;
-    list->count++;
+    listp->items[listp->count] = item;
+    DF_INC_RF(item);
+    listp->count++;
 }
 
 void
@@ -42,5 +48,70 @@ df_list_obj_clear(DfListObj *list)
 
     DF_MEM_FREE(list);
 
-    list = df_list_obj_init();
+    list = (DfListObj *)df_list_obj_init();
 }
+
+static int
+list_print(DfObject *list)
+{
+    int i;
+    DfListObj *listp = (DfListObj *)list;
+
+    printf("[");
+    if (listp->items != NULL)
+    {
+        for (i = 0; i < listp->count; i++)
+        {
+             if (i > 0)
+                 printf(", ");
+
+             if (df_obj_print(listp->items[i], 0) != 0)
+                return -1;
+        }
+    }
+    printf("]");
+
+    return 0;
+}
+
+static int
+list_length(DfObject *list)
+{
+    return ((DfListObj *)list)->count;
+}
+
+static void
+list_destroy(DfObject *list)
+{
+    int i;
+    DfListObj *listp = (DfListObj *)list;
+
+    if (listp->items != NULL)
+    {
+        for (i = 0; i < listp->count; i++)
+            DF_DEC_RF(listp->items[i]);
+
+        DF_MEM_FREE_ARRAY(DfObject *, listp->items, listp->capacity);
+    }
+    DF_MEM_FREE(listp);
+}
+
+static DfContOps as_container = {
+    (intunaryop)list_length,
+    NULL
+};
+
+DfType DfListType = {
+    "list",
+    sizeof(DfListObj),
+    0,
+    (voidunaryop)list_destroy,
+    NULL,
+    (intunaryop)list_print,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    &as_container,
+    NULL
+};

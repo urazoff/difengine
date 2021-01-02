@@ -11,7 +11,7 @@ df_code_obj_init(int stack_size)
     DfCodeObj *code = DF_MEM_ALLOC(sizeof(DfCodeObj));
 
     code->opcodes = df_bytes_obj_init();
-    code->consts = df_list_obj_init();
+    code->consts = (DfListObj *)df_list_obj_init();
     code->lines = df_bytes_obj_init();
     code->stack_size = stack_size;
 
@@ -89,7 +89,7 @@ df_code_obj_add_op(DfCodeObj *code, uint8_t opcode, int line)
 int
 df_code_obj_add_const(DfCodeObj *code, DfObject *const_obj)
 {
-    df_list_obj_extend(code->consts, const_obj);
+    df_list_obj_extend((DfObject *)code->consts, const_obj);
 
     return code->consts->count - 1;
 }

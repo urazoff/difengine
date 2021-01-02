@@ -18,18 +18,20 @@ typedef struct {
     DfObject **items;
 } DfListObj;    
 
+extern DfType DfListType;
+
 /**
  * Allocate new list object and initialize it.
  *
  * @return
  *   new&empty list object
  */
-extern DfListObj *df_list_obj_init();
+extern DfObject *df_list_obj_init();
 
 /**
  * Extend the list by adding new item.
  */
-extern void df_list_obj_extend(DfListObj *list, DfObject *item);
+extern void df_list_obj_extend(DfObject *list, DfObject *item);
 
 /**
  * Clear out the list.

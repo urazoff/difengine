@@ -1,50 +1,32 @@
 #include <stdio.h>
 #include "difengine.h"
+#include "defines.h"
 #include "memory.h"
 #include "object.h"
-#include "intobject.h"
-#include "floatobject.h"
+#include "hashobject.h"
+#include "stringobject.h"
 #include "listobject.h"
 
 int main(int argc, char *argv[])
 {
-    DfListObj *list;
-    DfListObj *get_list;
-    DfObject *object = NULL;
-    DfIntObj *num = DF_MEM_ALLOC(sizeof(DfIntObj));
-    DfIntObj *get_num;
-    DfFloatObj *f_num =  DF_MEM_ALLOC(sizeof(DfFloatObj));
-    DfFloatObj *get_f_num;
+    int ret_val;
+    DfObject *ret_p;
+    DfStrObj *str1 = df_str_obj_from_str("string #1");
+    DfStrObj *str2 = df_str_obj_from_str("string #2");
+    DfObject *ht = df_hash_obj_init();
+    DfObject *list = df_list_obj_init();
 
-    num->val = 1923;
-    f_num->val = 3.1415;
-    list = df_list_obj_init();
-    list->overallocate = true;
+    df_list_obj_extend(list, (DfObject *)str1);
+    df_list_obj_extend(list, (DfObject *)str2);
 
-    df_list_obj_extend(list, object);
-    df_list_obj_extend(list, (DfObject *)num);
-    df_list_obj_extend(list, (DfObject *)f_num);
-    /* Put the list as an element of itself */
-    df_list_obj_extend(list, (DfObject *)list);
+    ret_p = df_hash_obj_insert(ht, (DfObject *)str1, (DfObject *)str2);
 
-    printf("Code:\n---- count: %u \n"
-           "---- capacity %u \n",
-           list->count,
-           list->capacity);
+    df_list_obj_extend(list, ht);
 
-    get_num = (DfIntObj *)list->items[list->count - 3];
-    printf("Integer:\n ---- n=%d\n", get_num->val);
+    ret_val = df_obj_print(list, 1);
 
-    get_f_num = (DfFloatObj *)list->items[list->count - 2]; 
-    printf("Float:\n ---- n=%f\n", get_f_num->val);
-
-    get_list = (DfListObj *)list->items[list->count - 1];
-    get_num = (DfIntObj *)get_list->items[get_list->count - 3]; 
-    printf("Integer again:\n ---- n=%d\n", get_num->val);
-
-    DF_MEM_FREE(num);
-    DF_MEM_FREE(f_num);
-    df_list_obj_clear(list);
+    UNUSED(ret_val);
+    UNUSED(ret_p);
 
     printf("RES: Success\n");
 
