@@ -47,9 +47,9 @@ typedef enum {
 
 typedef struct syntax_tree {
     int type;
-    struct syntax_tree *left;
-    struct syntax_tree *right;
     char *value;
+    int degree;
+    struct syntax_tree **children;
 } DfTree;
 
 /**
@@ -58,16 +58,15 @@ typedef struct syntax_tree {
  * @return
  *   new AST node
  */
-extern DfTree* df_ast_new_node(int type, DfTree *left,
-                               DfTree *right);
+extern DfTree* df_ast_new_node(int type, const char *value);
 
 /**
- * Create new AST leaf.
+ * Add AST child.
  *
  * @return
- *   new AST leaf
+ *   AST parent
  */
-extern DfTree* df_ast_new_leaf(int type, const char *value);
+extern DfTree* df_ast_add_child(DfTree *parent, DfTree *child);
 
 /**
  * Print AST in a pretty way.

@@ -165,7 +165,9 @@ df_parser_precedence(DfParser *parser, int precedence)
         func infix = df_parser_get_rule(parser->tok_prev->type)->infix;
         node_type = df_parser_get_rule(parser->tok_prev->type)->node_type;
         node = infix(parser);
-        x = df_ast_new_node(node_type, x, node);
+        DfTree *y = df_ast_new_node(node_type, NULL);
+        y = df_ast_add_child(y, x);
+        x = df_ast_add_child(y, node);
     }
 
     return x;
@@ -182,7 +184,8 @@ unary_rule(DfParser *parser)
     node = df_parser_precedence(parser, P_UNARY);
     node_type = df_parser_get_rule(type)->node_type;
 
-    x = df_ast_new_node(node_type, node, NULL);
+    x = df_ast_new_node(node_type, NULL);
+    x = df_ast_add_child(x, node);
 
     return x;
 }
@@ -222,7 +225,7 @@ atomic_rule(DfParser *parser)
     value = DF_MEM_ALLOC((parser->tok_prev->length + 1) * sizeof(char));
     strncpy(value, parser->tok_prev->start, parser->tok_prev->length);
     value[parser->tok_prev->length] = '\0';
-    x = df_ast_new_leaf(node_type, value);
+    x = df_ast_new_node(node_type, value);
 
     return x;
 }

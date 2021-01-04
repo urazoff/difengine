@@ -35,27 +35,37 @@ const char * const NodeTypes[] = {
 };
 
 DfTree*
-df_ast_new_node(int type, DfTree *left, DfTree *right)
+df_ast_new_node(int type, const char *value)
 {
     DfTree *t = DF_MEM_ALLOC(sizeof(DfTree));
+    if (t == NULL)
+        return NULL;
+
     t->type = type;
-    t->left = left;
-    t->right = right;
-    t->value = NULL;
+    t->children = NULL;
+    t->degree = 0;
+    t->value = (char *)value;
 
     return t;
 }
 
-DfTree*
-df_ast_new_leaf(int type, const char *value)
-{
-    DfTree *t = DF_MEM_ALLOC(sizeof(DfTree));
-    t->type = type;
-    t->left = NULL;
-    t->right = NULL;
-    t->value = (char *)value;
+#define AST_COEF 2
+#define AST_CAPACITY(_x) \
+    ((_x) == 1 ? 1 : ((_x) + AST_COEF - 1) / AST_COEF * AST_COEF)
 
-    return t;
+DfTree*
+df_ast_add_child(DfTree *parent, DfTree *child)
+{
+    if (AST_CAPACITY(parent->degree) < parent->degree + 1)
+    {
+        parent->children = DF_MEM_GROW_ARRAY(DfTree *, parent->children,
+                                             parent->degree,
+                                             AST_CAPACITY(parent->degree + 1));
+    }
+
+    parent->children[parent->degree++] = child;
+
+    return parent;
 }
 
 void
@@ -82,7 +92,8 @@ df_ast_print(DfTree *t, int lvl)
     else
     {
         printf("\n");
-        df_ast_print(t->left, lvl);
-        df_ast_print(t->right, lvl);
+
+        for (i = 0; i < t->degree; i++)
+            df_ast_print(t->children[i], lvl);
     }
 }
