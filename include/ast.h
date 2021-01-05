@@ -74,6 +74,11 @@ extern DfTree* df_ast_add_child(DfTree *parent, DfTree *child);
  */
 extern void df_ast_print(DfTree *t, int lvl);
 
+/**
+ * Free whole tree
+ */
+extern void df_ast_free(DfTree *t);
+
 #ifdef __cplusplus
 }
 #endif

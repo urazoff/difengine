@@ -97,3 +97,20 @@ df_ast_print(DfTree *t, int lvl)
             df_ast_print(t->children[i], lvl);
     }
 }
+
+void
+df_ast_free(DfTree *t)
+{
+	int i;
+
+	for (i = t->degree; i > 0; i--)
+		df_ast_free(t->children[i - 1]);
+
+	if (t->children != NULL)
+		DF_MEM_FREE(t->children);
+
+	if (t->value != NULL)
+		DF_MEM_FREE(t->value);
+
+    DF_MEM_FREE(t);
+}

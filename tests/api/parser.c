@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     df_parser_expect(parser, TENDOF, "end of file");
 
     df_ast_print(x, 0);
+    df_ast_free(x);
 
     printf("RES: Success\n");
 
