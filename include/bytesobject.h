@@ -18,18 +18,20 @@ typedef struct {
     uint8_t *items;
 } DfBytesObj;
 
+extern DfType DfBytesType;
+
 /**
  * Allocate new bytes object and initialize it.
  *
  * @return
  *   new&empty bytes object
  */
-extern DfBytesObj *df_bytes_obj_init();
+extern DfObject *df_bytes_obj_init();
 
 /**
  * Add new byte.
  */
-extern void df_bytes_obj_extend(DfBytesObj *bytes, uint8_t byte);
+extern void df_bytes_obj_extend(DfObject *bytes, uint8_t byte);
 
 /**
  * Clear out the bytes object.

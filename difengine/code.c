@@ -10,9 +10,9 @@ df_code_obj_init(int stack_size)
 {
     DfCodeObj *code = DF_MEM_ALLOC(sizeof(DfCodeObj));
 
-    code->opcodes = df_bytes_obj_init();
+    code->opcodes = (DfBytesObj *)df_bytes_obj_init();
     code->consts = (DfListObj *)df_list_obj_init();
-    code->lines = df_bytes_obj_init();
+    code->lines = (DfBytesObj *)df_bytes_obj_init();
     code->stack_size = stack_size;
 
     return code;
@@ -26,29 +26,29 @@ df_code_obj_add_op(DfCodeObj *code, uint8_t opcode, int line)
     int i;
     int k;
 
-    df_bytes_obj_extend(code->opcodes, opcode);
+    df_bytes_obj_extend((DfObject *)code->opcodes, opcode);
 /* Lines routine efficiency is an open issue. */
 #define NEW_LINE() \
-    do {                                                    \
-        /* New line. Hence, run-length is 1. */             \
-        df_bytes_obj_extend(code->lines, 1);                \
-        while (line > 0)                                    \
-        {                                                   \
-            /* Line number exceeds one byte size.           \
-             * So more than one pair shall be written.      \
-             */                                             \
-            if (line > RLE_LIMIT)                           \
-            {                                               \
-                df_bytes_obj_extend(code->lines, RLE_LIMIT);\
-                df_bytes_obj_extend(code->lines, 0);        \
-                line -= RLE_LIMIT;                          \
-            }                                               \
-            else                                            \
-            {                                               \
-               df_bytes_obj_extend(code->lines, line);      \
-               line = 0;                                    \
-            }                                               \
-         }                                                  \
+    do {                                                                 \
+        /* New line. Hence, run-length is 1. */                          \
+        df_bytes_obj_extend((DfObject *)code->lines, 1);                 \
+        while (line > 0)                                                 \
+        {                                                                \
+            /* Line number exceeds one byte size.                        \
+             * So more than one pair shall be written.                   \
+             */                                                          \
+            if (line > RLE_LIMIT)                                        \
+            {                                                            \
+                df_bytes_obj_extend((DfObject *)code->lines, RLE_LIMIT); \
+                df_bytes_obj_extend((DfObject *)code->lines, 0);         \
+                line -= RLE_LIMIT;                                       \
+            }                                                            \
+            else                                                         \
+            {                                                            \
+               df_bytes_obj_extend((DfObject *)code->lines, line);       \
+               line = 0;                                                 \
+            }                                                            \
+         }                                                               \
     } while (0)
 
     /* RLE encoding */
@@ -76,9 +76,10 @@ df_code_obj_add_op(DfCodeObj *code, uint8_t opcode, int line)
                  /* Run-length exceeds byte size.
                   * So increment it by copying line number.
                   */
-                 df_bytes_obj_extend(code->lines, 1);
+                 df_bytes_obj_extend((DfObject *)code->lines, 1);
                  for (k = i + 1; k < code->lines->count; k++)
-                     df_bytes_obj_extend(code->lines, code->lines->items[k]);
+                     df_bytes_obj_extend((DfObject *)code->lines,
+                                         code->lines->items[k]);
              }
          }
          else
