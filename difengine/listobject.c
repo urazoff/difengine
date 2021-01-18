@@ -104,7 +104,7 @@ static DfContOps as_container = {
 DfType DfListType = {
     "list",
     sizeof(DfListObj),
-    0,
+    sizeof(DfObject *),
     (voidunaryop)list_destroy,
     NULL,
     (intunaryop)list_print,
