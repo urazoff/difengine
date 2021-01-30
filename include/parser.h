@@ -74,6 +74,14 @@ extern void df_parser_expect(DfParser *parser, int token, const char *err_msg);
  */
 extern DfTree* df_parser_precedence(DfParser *parser, int precedence);
 
+/**
+ * Parse code.
+ *
+ * @return
+ *   Abstract syntax tree
+ */
+extern DfTree* df_parser_parse(DfParser *parser);
+
 #ifdef __cplusplus
 }
 #endif

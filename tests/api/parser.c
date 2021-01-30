@@ -5,17 +5,21 @@
 int main(int argc, char *argv[])
 {
     DfTree *x = NULL;
-    const char *inp_str = "val = (-12 + 2)*val - 31/2 + \"str\"";
+    const char *inp_str = "x = \"string\";"
+                          "\nA = [[1, y], [3.5, 3*4-2]];"
+                          "\ndef foo(x)\n"
+                          "{\n    return 2/x;\n}"
+                          "\nfor x in A\n"
+                          "\nprint(foo(x));";
 
-    printf("expr: %s;\n", inp_str);
+    printf("block:\n%s\n", inp_str);
     DfLexer *lexer = df_lexer_init_from_str(inp_str);
 
     DfParser *parser = df_parser_init(lexer);
 
-    df_parser_proceed(parser);
-    x = df_parser_precedence(parser, P_ASSIGNMENT);
-    df_parser_expect(parser, TENDOF, "end of file");
+    x = df_parser_parse(parser);
 
+    printf("AST:\n");
     df_ast_print(x, 0);
     df_ast_free(x);
 

@@ -30,6 +30,8 @@ typedef enum {
     RPAREN,
     LBRACE,
     RBRACE,
+    LBRACKET,
+    RBRACKET,
     COMMA,
     DOT,
     MINUS,
@@ -50,6 +52,8 @@ typedef enum {
     NUMBER,
     /* reserved keywords */
     K_IF,
+    K_ELSE,
+    K_ELIF,
     K_OR,
     K_IN,
     K_AND,

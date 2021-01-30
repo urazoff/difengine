@@ -71,13 +71,18 @@ df_parser_fill_token(DfParser *parser)
 static DfTree* unary_rule(DfParser *parser);
 static DfTree* binary_rule(DfParser *parser);
 static DfTree* grouping_rule(DfParser *parser);
+static DfTree* list_rule(DfParser *parser);
+static DfTree* call_rule(DfParser *parser);
+static DfTree* item_rule(DfParser *parser);
 static DfTree* atomic_rule(DfParser *parser);
 
 /* Ordered according to internal/tokens.h */
 DfParseRule parse_rules[] = {
-  { grouping_rule, NULL, P_NONE, -1},
+  { grouping_rule, call_rule, P_CALL, N_CALL},
   { NULL, NULL, P_NONE, -1 },
   { NULL, NULL, P_NONE, -1 },
+  { NULL, NULL, P_NONE, -1 },
+  { list_rule, item_rule, P_CALL, N_ITEM},
   { NULL, NULL, P_NONE, -1},
   { NULL, NULL, P_NONE, -1},
   { NULL, NULL, P_NONE, -1},
@@ -86,21 +91,23 @@ DfParseRule parse_rules[] = {
   { NULL, NULL, P_NONE, -1},
   { NULL, binary_rule, P_FACTOR, N_DIVIDE},
   { NULL, binary_rule, P_FACTOR, N_MULTIPLY},
-  { NULL, NULL, P_NONE, -1},
-  { NULL, NULL, P_NONE, -1},
-  { NULL, binary_rule, P_ASSIGNMENT, N_EQUAL},
-  { NULL, NULL, P_NONE, -1},
-  { NULL, NULL, P_NONE, -1},
-  { NULL, NULL, P_NONE, -1},
-  { NULL, NULL, P_NONE, -1},
+  { NULL, binary_rule, P_COMPARISON, N_GREATER},
+  { NULL, binary_rule, P_COMPARISON, N_LESS},
+  { NULL, binary_rule, P_ASSIGNMENT, N_ASSIGNMENT},
+  { NULL, binary_rule, P_COMPARISON, N_GREATEREQ},
+  { NULL, binary_rule, P_COMPARISON, N_LESSEQ},
+  { NULL, binary_rule, P_COMPARISON, N_EQUAL},
+  { NULL, binary_rule, P_COMPARISON, N_NOTEQUAL},
   { atomic_rule, NULL, P_NONE, N_IDENTIFIER},
   { atomic_rule, NULL, P_NONE, N_STRING},
   { atomic_rule, NULL, P_NONE, N_NUMBER},
   { NULL, NULL, P_NONE, -1},
   { NULL, NULL, P_NONE, -1},
   { NULL, NULL, P_NONE, -1},
+  { NULL, binary_rule, P_OR, N_OR},
   { NULL, NULL, P_NONE, -1},
-  { NULL, NULL, P_NONE, -1},
+  { NULL, binary_rule, P_AND, N_AND},
+  { unary_rule, NULL, P_NONE, N_NOT},
   { NULL, NULL, P_NONE, -1},
   { NULL, NULL, P_NONE, -1},
   { atomic_rule, NULL, P_NONE, N_NULL},
@@ -230,6 +237,65 @@ atomic_rule(DfParser *parser)
     return x;
 }
 
+static DfTree*
+call_rule(DfParser *parser)
+{
+    DfTree *x = NULL;
+    DfTree *arg = NULL;
+
+    x = df_ast_new_node(N_SEQUENCE, NULL);
+
+    if (parser->tok_cur->type != RPAREN)
+    {
+        do {
+            /* Skip comma */
+            if (arg != NULL)
+                df_parser_proceed(parser);
+            arg = df_parser_precedence(parser, P_ASSIGNMENT);
+            x = df_ast_add_child(x, arg);
+        } while (parser->tok_cur->type == COMMA);
+    }
+    df_parser_expect(parser, RPAREN, "closing ')'");
+
+    return x;
+}
+
+static DfTree*
+list_rule(DfParser *parser)
+{
+    DfTree *x = NULL;
+    DfTree *item = NULL;
+
+    x = df_ast_new_node(N_LIST, NULL);
+
+    if (parser->tok_cur->type != RBRACKET)
+    {
+        do {
+            /* Skip comma */
+            if (item != NULL)
+                df_parser_proceed(parser);
+            item = df_parser_precedence(parser, P_ASSIGNMENT);
+            x = df_ast_add_child(x, item);
+        } while (parser->tok_cur->type == COMMA);
+    }
+    df_parser_expect(parser, RBRACKET, "closing ']'");
+
+    return x;
+}
+
+/* TODO: support slice here */
+static DfTree*
+item_rule(DfParser *parser)
+{
+    DfTree *x = NULL;
+
+    x = df_parser_precedence(parser, P_ASSIGNMENT);
+
+    df_parser_expect(parser, RBRACKET, "closing ']'");
+
+    return x;
+}
+
 DfParser*
 df_parser_init(DfLexer *lexer)
 {
@@ -242,4 +308,179 @@ df_parser_init(DfLexer *lexer)
     parser->tok_prev = NULL;
 
     return parser;
+}
+
+DfTree* df_parser_stmt(DfParser *parser);
+
+DfTree*
+df_parser_stmt_block(DfParser *parser)
+{
+    DfTree *x = NULL;
+    DfTree *s = NULL;
+
+    x = df_ast_new_node(N_SEQUENCE, NULL);
+    df_parser_proceed(parser);
+    while (parser->tok_cur->type != TENDOF && parser->tok_cur->type != RBRACE)
+    {
+        s = df_parser_stmt(parser);
+        x = df_ast_add_child(x, s);
+    }
+    df_parser_expect(parser, RBRACE, "closing '}'");
+
+    return x;
+}
+
+DfTree*
+df_parser_stmt(DfParser *parser)
+{
+    DfTree *x = NULL;
+    DfTree *e = NULL;
+    DfTree *s = NULL;
+    DfTree *y = NULL;
+
+#define PARSE_CONDITION(_k) \
+    do {                                                            \
+        df_parser_proceed(parser);                                  \
+        df_parser_expect(parser, LPAREN, "'(' after "_k" keyword"); \
+        e = df_parser_precedence(parser, P_ASSIGNMENT);             \
+        df_parser_expect(parser, RPAREN, "closing ')'");            \
+    } while (0)
+
+    switch (parser->tok_cur->type)
+    {
+        case LBRACE:
+            x = df_parser_stmt_block(parser);
+            break;
+
+        case K_IF:
+            PARSE_CONDITION("IF");
+            s = df_parser_stmt(parser);
+            x = df_ast_add_child(df_ast_new_node(N_IF, NULL), e);
+            x = df_ast_add_child(x, s);
+
+            while (parser->tok_cur->type == K_ELIF)
+            {
+                PARSE_CONDITION("ELIF");
+                s = df_parser_stmt(parser);
+                y = df_ast_add_child(df_ast_new_node(N_IF, NULL), e);
+                y = df_ast_add_child(y, s);
+                x = df_ast_add_child(x, y);
+            }
+
+            if (parser->tok_cur->type == K_ELSE)
+            {
+                df_parser_proceed(parser);
+                s = df_parser_stmt(parser);
+                x = df_ast_add_child(x, s);
+            }
+            break;
+
+        case K_FOR:
+            df_parser_proceed(parser);
+            e = df_parser_precedence(parser, P_ASSIGNMENT);
+            if (e->type != N_IDENTIFIER)
+                df_parser_expect(parser, -1,
+                                "IDENTIFIER after FOR keyword");
+            df_parser_expect(parser, K_IN, "IN in FOR statement");
+            y = df_parser_precedence(parser, P_ASSIGNMENT);
+            x = df_ast_add_child(df_ast_new_node(N_FOR, NULL), e);
+            x = df_ast_add_child(x, y);
+            s = df_parser_stmt(parser);
+            x = df_ast_add_child(x, s);
+            break;
+
+        case K_WHILE:
+            PARSE_CONDITION("WHILE");
+            s = df_parser_stmt(parser);
+            x = df_ast_add_child(df_ast_new_node(N_WHILE, NULL), e);
+            x = df_ast_add_child(x, s);
+            break;
+
+        case K_RETURN:
+            df_parser_proceed(parser);
+            x = df_ast_new_node(N_RETURN, NULL);
+            if (parser->tok_cur->type == SEMICOLON)
+            {
+                df_parser_proceed(parser);
+                break;
+            }
+
+            e = df_parser_precedence(parser, P_ASSIGNMENT);
+            df_parser_expect(parser, SEMICOLON, "';' after expression");
+            x = df_ast_add_child(x, e);
+            break;
+
+        case TENDOF:
+            return NULL;
+
+        default:
+            x = df_parser_precedence(parser, P_ASSIGNMENT);
+            df_parser_expect(parser, SEMICOLON, "';' after expression");
+    }
+
+    return x;
+}
+
+DfTree* df_parser_decl(DfParser *parser);
+
+DfTree*
+df_parser_decl_block(DfParser *parser)
+{
+    DfTree *x = NULL;
+    DfTree *d = NULL;
+
+    x = df_ast_new_node(N_SEQUENCE, NULL);
+    while (parser->tok_cur->type != TENDOF && parser->tok_cur->type != RBRACE)
+    {
+        d = df_parser_decl(parser);
+        x = df_ast_add_child(x, d);
+    }
+    df_parser_expect(parser, RBRACE, "closing '}'");
+
+    return x;
+}
+
+DfTree*
+df_parser_decl(DfParser *parser)
+{
+    DfTree *x = NULL;
+    DfTree *e = NULL;
+    DfTree *d = NULL;
+
+    switch (parser->tok_cur->type)
+    {
+        case K_CLASS:
+            break;
+
+        case K_DEF:
+            df_parser_proceed(parser);
+            e = df_parser_precedence(parser, P_ASSIGNMENT);
+            if (e->type != N_CALL)
+                df_parser_expect(parser, -1,
+                                "'<name>(<args>)' after DEF keyword");
+            x = df_ast_add_child(df_ast_new_node(N_DEF, NULL), e);
+            df_parser_expect(parser, LBRACE,
+                                "'{' in function declaration");
+            d = df_parser_decl_block(parser);
+            x = df_ast_add_child(x, d);
+            break;
+
+        default:
+            x = df_parser_stmt(parser);
+    }
+
+    return x;
+}
+
+DfTree*
+df_parser_parse(DfParser *parser)
+{
+    DfTree *x = NULL;
+
+    x = df_ast_new_node(N_SEQUENCE, NULL);
+
+    for (df_parser_proceed(parser); parser->tok_cur->type != TENDOF; )
+        x = df_ast_add_child(x, df_parser_decl(parser));
+
+    return x;
 }

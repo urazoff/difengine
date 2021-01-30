@@ -8,6 +8,8 @@ const char * const DfTokenNames[] = {
     "RPAREN",
     "LBRACE",
     "RBRACE",
+    "LBRACKET",
+    "RBRACKET",
     "COMMA",
     "DOT",
     "MINUS",
@@ -26,6 +28,8 @@ const char * const DfTokenNames[] = {
     "STRING",
     "NUMBER",
     "K_IF",
+    "K_ELSE",
+    "K_ELIF",
     "K_OR",
     "K_IN",
     "K_AND",
@@ -64,6 +68,8 @@ static DfKeyWord *keywords[] = {
     (DfKeyWord[]) {
         {"Null", K_NULL},
         {"True", K_TRUE},
+        {"else", K_ELSE},
+        {"elif", K_ELIF},
         {NULL, -1}
     },
     (DfKeyWord[]) {
@@ -105,6 +111,8 @@ df_token_single(char c)
         case ')': return RPAREN;
         case '{': return LBRACE;
         case '}': return RBRACE;
+        case '[': return LBRACKET;
+        case ']': return RBRACKET;
         case ',': return COMMA;
         case '.': return DOT;
         case '-': return MINUS;
