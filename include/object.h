@@ -135,6 +135,11 @@ extern int df_obj_compare(DfObject *a, DfObject *b);
  */
 extern int df_obj_print(DfObject *obj, int flags);
 
+/**
+ * Destroy an object.
+ */
+extern void df_obj_destroy(DfObject *obj);
+
 #ifdef __cplusplus
 }
 #endif

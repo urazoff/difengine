@@ -82,3 +82,9 @@ df_obj_print(DfObject *obj, int flags)
 
     return 0;
 }
+
+void
+df_obj_destroy(DfObject *obj)
+{
+    (*obj->type->destroy)(obj);
+}
