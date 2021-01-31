@@ -8,7 +8,7 @@
 DfCodeObj*
 df_code_obj_init(int stack_size)
 {
-    DfCodeObj *code = DF_MEM_ALLOC(sizeof(DfCodeObj));
+    DfCodeObj *code = (DfCodeObj *)df_obj_new(&DfCodeType);
 
     code->opcodes = (DfBytesObj *)df_bytes_obj_init();
     code->consts = (DfListObj *)df_list_obj_init();
@@ -145,3 +145,30 @@ df_code_obj_clear(DfCodeObj *code)
     DF_MEM_FREE(code);
     code = df_code_obj_init(stack_size);
 }
+
+static void
+code_destroy(DfObject *code)
+{
+    DfCodeObj *codep = (DfCodeObj *)code;
+
+    df_obj_destroy((DfObject *)codep->opcodes);
+    df_obj_destroy((DfObject *)codep->consts);
+    df_obj_destroy((DfObject *)codep->lines);
+
+    DF_MEM_FREE(codep);
+}
+
+DfType DfCodeType = {
+    "bytecode",
+    sizeof(DfCodeObj),
+    0,
+    (voidunaryop)code_destroy,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+};

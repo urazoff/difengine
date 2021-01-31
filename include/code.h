@@ -23,6 +23,8 @@ typedef struct {
     int stack_size;      /* how big is a stack needed */
 } DfCodeObj;
 
+extern DfType DfCodeType;
+
 /**
  * Allocate new code object and initialize it.
  *

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "difengine.h"
+#include "object.h"
 #include "intobject.h"
 #include "opcode.h"
 #include "code.h"
@@ -23,7 +24,7 @@ int main(int argc, char *argv[])
 
     df_dis_code_obj(code, "test_code");
 
-    df_code_obj_clear(code);
+    df_obj_destroy((DfObject *)code);
 
     printf("RES: Success\n");
 
