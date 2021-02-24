@@ -30,6 +30,14 @@ extern DfObject* df_num_negative(DfObject *a);
 extern DfObject* df_num_add(DfObject *a, DfObject *b);
 
 /**
+ * Subtract two objects of numeric type.
+ *
+ * @return
+ *   new numeric object containing result
+ */
+extern DfObject* df_num_sub(DfObject *a, DfObject *b);
+
+/**
  * Multiply two objects of numeric type.
  *
  * @return

@@ -2,28 +2,52 @@
 #include "intobject.h"
 #include "memory.h"
 
+/* High level numeric operations */
 DfObject*
 df_num_negative(DfObject *a)
 {
-    DfIntObj *negative = df_int_obj_new(-((DfIntObj *)a)->val);
+    if (a->type->as_numeric != NULL && a->type->as_numeric->neg != NULL)
+        return (*a->type->as_numeric->neg)(a);
 
-    return (DfObject *)negative;
+    /* TODO: Handle error */
+    return NULL;
 }
 
 DfObject*
 df_num_add(DfObject *a, DfObject *b)
 {
-    DfIntObj *sum = df_int_obj_new(((DfIntObj *)a)->val +
-                                   ((DfIntObj *)b)->val);
+    /* TODO: type checks must be more complex
+     * to operate args of different types */
+    if (a->type->as_numeric != NULL && a->type->as_numeric->add != NULL &&
+        a->type == b->type)
+        return (*a->type->as_numeric->add)(a, b);
 
-    return (DfObject *)sum;
+    /* TODO: Handle error */
+    return NULL;
+}
+
+DfObject*
+df_num_sub(DfObject *a, DfObject *b)
+{
+    /* TODO: type checks must be more complex
+     * to operate args of different types */
+    if (a->type->as_numeric != NULL && a->type->as_numeric->sub != NULL &&
+        a->type == b->type)
+        return (*a->type->as_numeric->sub)(a, b);
+
+    /* TODO: Handle error */
+    return NULL;
 }
 
 DfObject*
 df_num_multiply(DfObject *a, DfObject *b)
 {
-    DfIntObj *multiply = df_int_obj_new(((DfIntObj *)a)->val *
-                                        ((DfIntObj *)b)->val);
+    /* TODO: type checks must be more complex
+     * to operate args of different types */
+    if (a->type->as_numeric != NULL && a->type->as_numeric->mul != NULL &&
+        a->type == b->type)
+        return (*a->type->as_numeric->mul)(a, b);
 
-    return (DfObject *)multiply;
+    /* TODO: Handle error */
+    return NULL;
 }

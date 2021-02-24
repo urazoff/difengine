@@ -60,6 +60,13 @@
       "expectations": [
         "Success"
       ]
+    },
+    {
+      "exe": "integer",
+      "name": "Integer object",
+      "expectations": [
+        "Success"
+      ]
     }
   ]
 }

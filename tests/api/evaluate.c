@@ -11,19 +11,19 @@ int main(int argc, char *argv[])
 {
     DfCodeObj *code;
     DfFrameObj *frame;
-    DfIntObj *const_obj_a = DF_MEM_ALLOC(sizeof(DfIntObj));
-    DfIntObj *const_obj_b = DF_MEM_ALLOC(sizeof(DfIntObj));
+    DfIntObj *const_obj_a = (DfIntObj *)df_int_obj_init(1);
+    DfIntObj *const_obj_b = (DfIntObj *)df_int_obj_init(1);
     int i;
 
     code = df_code_obj_init(100);
 
-    const_obj_a->val = 17;
+    const_obj_a->digits[0] = 17;
     i =  df_code_obj_add_const(code, (DfObject *)const_obj_a);
 
     df_code_obj_add_op(code, LOAD_CONST, 1);
     df_code_obj_add_op(code, i, 1);
 
-    const_obj_b->val = 5;
+    const_obj_b->digits[0] = 5;
     i =  df_code_obj_add_const(code, (DfObject *)const_obj_b);
 
     df_code_obj_add_op(code, LOAD_CONST, 1);

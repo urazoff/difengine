@@ -39,7 +39,10 @@ df_eval_frame(DfFrameObj *frame)
          */
         printf("----\n");
         for (DfObject **value = frame->stack; value < frame->stack_top; value++)
-            printf("[ %d ]\n", ((DfIntObj *)*value)->val);
+        {
+            df_int_print_digits(*value);
+            printf("\n");
+        }
 #endif
         opcode = NOPCODE();
         if (HAS_ARG(opcode))

@@ -22,7 +22,9 @@ df_dis_load_const(const char *name, DfCodeObj *code, int offset)
     const_obj = code->consts->items[const_index];
 
     /* There are no types yet. So assume that const_obj is of int type. */
-    printf("%s %4d %d\n", name, const_index, ((DfIntObj *)const_obj)->val);
+    printf("%s %4d ", name, const_index);
+    df_int_print_digits(const_obj);
+    printf("\n");
 
     return offset + 2;
 }

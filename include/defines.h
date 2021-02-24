@@ -15,6 +15,16 @@ extern "C" {
  */
 #define UNUSED(_x) (void)(_x)
 
+/*
+ * Get absolute value.
+ */
+#define DF_ABS(_x) ((_x >= 0) ? _x : -_x)
+
+/*
+ * signum(x).
+ */
+#define DF_SGN(_x) ((_x > 0) ? 1 : (_x == 0) ? 0 : -1)
+
 #ifdef __cplusplus
 }
 #endif
