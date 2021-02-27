@@ -242,33 +242,29 @@ int_multiply_s(DfIntObj *x, DfIntObj *y)
     df_digit c;
     int ix;
     int iy;
-    int size;
     int size_x;
     int size_y;
-    int d;
 
     size_x = DF_ABS(x->count);
     size_y = DF_ABS(y->count);
-    size = size_x + size_y;
 
-    DfIntObj *p = (DfIntObj *)df_int_obj_init(size);
+    DfIntObj *p = (DfIntObj *)df_int_obj_init(size_x + size_y);
     if (p == NULL)
         return NULL;
 
     for (ix = 0; ix < size_x; ++ix)
     {
         c = 0;
-        d = size - ix;
-        for (iy = 0; iy < d; ++iy)
+        for (iy = 0; iy < size_y; ++iy)
         {
             carry = (df_word)p->digits[ix + iy] +
                     ((df_word)x->digits[ix] * (df_word)y->digits[iy]) +
                     (df_word)c;
-            p->digits[ix + iy] = (df_digit)(carry & DF_INT_MASK);
-            c = (df_digit)(carry >> DF_INT_BITS);
+            p->digits[ix + iy] = (df_digit)(carry & (df_word)DF_INT_MASK);
+            c = (df_digit)(carry >> (df_word)DF_INT_BITS);
         }
+        p->digits[ix + size_y] = c;
     }
-    p->digits[size - 1] = c;
 
     return remove_leading_zeros(p);
 }
