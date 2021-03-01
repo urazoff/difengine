@@ -94,6 +94,31 @@ int_compare_abs(DfIntObj *x, DfIntObj *y)
     return 0;
 }
 
+static int
+int_compare(DfObject *a, DfObject *b)
+{
+    DfIntObj *x = (DfIntObj *)a;
+    DfIntObj *y = (DfIntObj *)b;
+    int sgn_x;
+    int sgn_y;
+    int res;
+
+    sgn_x = DF_SGN(x->count);
+    sgn_y = DF_SGN(y->count);
+
+    if (sgn_x != sgn_y)
+        return sgn_x > sgn_y ? 1 : -1;
+
+    if (sgn_x == 0)
+        return 0;
+
+    res = int_compare_abs(x, y);
+    if (sgn_x < 0)
+        return -res;
+
+    return res;
+}
+
 /* Primary school method ~ O(n).
  * Doesn't handle signs. Assume |x->count| >= |y->count|.
  * */
@@ -528,7 +553,7 @@ DfType DfIntType = {
     (voidunaryop)int_destroy,
     NULL,
     (intunaryop)int_print,
-    NULL,
+    (intbinaryop)int_compare,
     NULL,
     NULL,
     &as_numeric,

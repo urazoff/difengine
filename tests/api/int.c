@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     DfObject *y;
     DfObject *z;
     DfObject *s;
+    int cmp;
 
     printf("a = ");
     df_obj_print(a, 0);
@@ -17,6 +18,14 @@ int main(int argc, char *argv[])
     printf("b = ");
     df_obj_print(b, 0);
     printf(";\n");
+
+    cmp = df_obj_compare(a, b);
+    if (cmp == 0)
+        printf("a = b\n");
+    else if (cmp == -1)
+        printf("a < b\n");
+    else
+        printf("a > b\n");
 
     printf("a * b = ");
     y = df_num_multiply(a, b);
