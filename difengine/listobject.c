@@ -80,6 +80,29 @@ list_length(DfObject *list)
     return ((DfListObj *)list)->count;
 }
 
+static int
+list_compare(DfObject *a, DfObject *b)
+{
+    int i;
+    int res;
+    DfListObj *x = (DfListObj *)a;
+    DfListObj *y = (DfListObj *)b;
+    int size_x = x->count;
+    int size_y = y->count;
+
+    if (size_x != size_y)
+        return size_x - size_y;
+
+    for (i = 0; i < size_x; ++i)
+    {
+        res = df_obj_compare(x->items[i], y->items[i]);
+        if (res != 0)
+            return res;
+    }
+
+    return 0;
+}
+
 static void
 list_destroy(DfObject *list)
 {
@@ -108,7 +131,7 @@ DfType DfListType = {
     (voidunaryop)list_destroy,
     NULL,
     (intunaryop)list_print,
-    NULL,
+    (intbinaryop)list_compare,
     NULL,
     NULL,
     NULL,
