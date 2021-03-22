@@ -88,6 +88,27 @@ bytes_length(DfObject *bytes)
     return ((DfBytesObj *)bytes)->count;
 }
 
+static int
+bytes_compare(DfObject *a, DfObject *b)
+{
+    int i;
+    DfBytesObj *x = (DfBytesObj *)a;
+    DfBytesObj *y = (DfBytesObj *)b;
+    int size_x = x->count;
+    int size_y = y->count;
+
+    if (size_x != size_y)
+        return size_x - size_y;
+
+    for (i = 0; i < size_x; ++i)
+    {
+        if (x->items[i] != y->items[i])
+            return x->items[i] - y->items[i];
+    }
+
+    return 0;
+}
+
 static void
 bytes_destroy(DfObject *bytes)
 {
@@ -109,7 +130,7 @@ DfType DfBytesType = {
     (voidunaryop)bytes_destroy,
     NULL,
     (intunaryop)bytes_print,
-    NULL,
+    (intbinaryop)bytes_compare,
     NULL,
     NULL,
     NULL,
