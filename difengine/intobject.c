@@ -517,6 +517,30 @@ int_print(DfObject *a)
     return 0;
 }
 
+/* The main idea is to represent bugnum as array of bytes
+ * and just apply FNV. Here representation as decimal
+ * string is used.
+ * */
+static uint32_t
+int_hash(DfObject *a)
+{
+    char *str = int_to_decimal_str((DfIntObj *)a);
+    if (str == NULL)
+        return ENOMEM;
+    char *to_free = str;
+
+    uint32_t hash = 2166136261ul;
+    while (*str != 0)
+    {
+        hash ^= *str;
+        hash *= 0x01000193;
+        str++;
+    }
+
+    DF_MEM_FREE(to_free);
+    return hash;
+}
+
 static int
 int_length(DfObject *a)
 {
@@ -551,7 +575,7 @@ DfType DfIntType = {
     sizeof(DfIntObj),
     DF_WSIZE/16,
     (voidunaryop)int_destroy,
-    NULL,
+    (hashop)int_hash,
     (intunaryop)int_print,
     (intbinaryop)int_compare,
     NULL,
