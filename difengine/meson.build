@@ -32,6 +32,11 @@ int_lib = static_library('int',
                           include_directories: global_inc,
                           link_with: mem_lib)
 
+float_lib = static_library('float',
+                           'floatobject.c',
+                           include_directories: global_inc,
+                           link_with: mem_lib)
+
 ops_lib = static_library('ops',
                          'objectops.c',
                           include_directories: global_inc,
@@ -64,6 +69,7 @@ df_libs += [
             code_lib,
             frame_lib,
             int_lib,
+            float_lib,
             ops_lib,
             eval_lib,
             list_lib,

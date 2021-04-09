@@ -18,6 +18,16 @@ typedef struct {
     double val;
 } DfFloatObj;
 
+extern DfType DfFloatType;
+
+/**
+ * Create float object from double.
+ *
+ * @return
+ *   new float object
+ */
+extern DfObject* df_float_obj_init(double val);
+
 #ifdef __cplusplus
 }
 #endif
