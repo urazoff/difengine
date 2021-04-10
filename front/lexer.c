@@ -14,6 +14,7 @@ const char * const DfTokenNames[] = {
     "DOT",
     "MINUS",
     "PLUS",
+    "COLON",
     "SEMICOLON",
     "SLASH",
     "ASTERISK",
@@ -117,6 +118,7 @@ df_token_single(char c)
         case '.': return DOT;
         case '-': return MINUS;
         case '+': return PLUS;
+        case ':': return COLON;
         case ';': return SEMICOLON;
         case '/': return SLASH;
         case '*': return ASTERISK;

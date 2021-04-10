@@ -30,6 +30,7 @@ const char * const NodeTypes[] = {
     "CALL",
     "LIST",
     "ITEM",
+    "HASH",
     "WHILE",
     "BREAK",
     "CLASS",
@@ -90,16 +91,12 @@ df_ast_print(DfTree *t, int lvl)
     printf("%s", NodeTypes[t->type]);
 
     if (t->value != NULL)
-    {
         printf(" = %s\n", t->value);
-    }
     else
-    {
         printf("\n");
 
-        for (i = 0; i < t->degree; i++)
-            df_ast_print(t->children[i], lvl);
-    }
+    for (i = 0; i < t->degree; i++)
+        df_ast_print(t->children[i], lvl);
 }
 
 void

@@ -36,6 +36,7 @@ typedef enum {
     DOT,
     MINUS,
     PLUS,
+    COLON,
     SEMICOLON,
     SLASH,
     ASTERISK,

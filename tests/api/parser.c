@@ -10,7 +10,8 @@ int main(int argc, char *argv[])
                           "\ndef foo(x)\n"
                           "{\n    return 2/x;\n}"
                           "\nfor x in A\n"
-                          "\nprint(foo(x));";
+                          "\nprint(foo(x));"
+                          "\nH = {a : b, 'str' : 4};";
 
     printf("block:\n%s\n", inp_str);
     DfLexer *lexer = df_lexer_init_from_str(inp_str);

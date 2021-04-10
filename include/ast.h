@@ -41,6 +41,7 @@ typedef enum {
     N_CALL,
     N_LIST,
     N_ITEM,
+    N_HASH,
     N_WHILE,
     N_BREAK,
     N_CLASS,

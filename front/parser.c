@@ -72,6 +72,7 @@ static DfTree* unary_rule(DfParser *parser);
 static DfTree* binary_rule(DfParser *parser);
 static DfTree* grouping_rule(DfParser *parser);
 static DfTree* list_rule(DfParser *parser);
+static DfTree* hash_rule(DfParser *parser);
 static DfTree* call_rule(DfParser *parser);
 static DfTree* item_rule(DfParser *parser);
 static DfTree* atomic_rule(DfParser *parser);
@@ -80,7 +81,7 @@ static DfTree* atomic_rule(DfParser *parser);
 DfParseRule parse_rules[] = {
   { grouping_rule, call_rule, P_CALL, N_CALL},
   { NULL, NULL, P_NONE, -1 },
-  { NULL, NULL, P_NONE, -1 },
+  { hash_rule, NULL, P_NONE, -1 },
   { NULL, NULL, P_NONE, -1 },
   { list_rule, item_rule, P_CALL, N_ITEM},
   { NULL, NULL, P_NONE, -1},
@@ -88,6 +89,7 @@ DfParseRule parse_rules[] = {
   { NULL, NULL, P_NONE, -1},
   { unary_rule, binary_rule, P_TERM, N_MINUS},
   { NULL, binary_rule, P_TERM, N_PLUS},
+  { NULL, NULL, P_NONE, -1},
   { NULL, NULL, P_NONE, -1},
   { NULL, binary_rule, P_FACTOR, N_DIVIDE},
   { NULL, binary_rule, P_FACTOR, N_MULTIPLY},
@@ -279,6 +281,33 @@ list_rule(DfParser *parser)
         } while (parser->tok_cur->type == COMMA);
     }
     df_parser_expect(parser, RBRACKET, "closing ']'");
+
+    return x;
+}
+
+static DfTree*
+hash_rule(DfParser *parser)
+{
+    DfTree *x = NULL;
+    DfTree *key = NULL;
+    DfTree *value = NULL;
+
+    x = df_ast_new_node(N_HASH, NULL);
+
+    if (parser->tok_cur->type != RBRACE)
+    {
+        do {
+            /* Skip comma */
+            if (value != NULL)
+                df_parser_proceed(parser);
+            key = df_parser_precedence(parser, P_ASSIGNMENT);
+            df_parser_expect(parser, COLON, "':' between key and value");
+            value = df_parser_precedence(parser, P_ASSIGNMENT);
+            key = df_ast_add_child(key, value);
+            x = df_ast_add_child(x, key);
+        } while (parser->tok_cur->type == COMMA);
+    }
+    df_parser_expect(parser, RBRACE, "closing '}'");
 
     return x;
 }
