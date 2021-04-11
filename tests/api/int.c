@@ -5,8 +5,8 @@
 
 int main(int argc, char *argv[])
 {
-    DfObject *a = df_int_from_str("53923543891348405834500421932457932476387");
-    DfObject *b = df_int_from_str("13845648293248349438457293245905734012349");
+    DfObject *a = df_int_from_str("-592354389134840583450042193245793247638");
+    DfObject *b = df_int_from_str("384564829324834943845729324590573401234");
     DfObject *y;
     DfObject *z;
     DfObject *s;

@@ -420,18 +420,25 @@ df_int_from_str(char *digits)
     /* TODO: support different radices */
     int b = 10; /* digits are decimal */
     int i;
+    int neg = 0;
     int len = strlen(digits);
     int size = DF_SIZE_FROM_DEC(len);
 
     DfIntObj *x = (DfIntObj *)df_int_obj_init(size);
 
+    if (digits[0] == '-')
+       neg = 1;
+
     /* Just evaluate the number */
-    x->digits[0] = digits[0] - '0';
+    x->digits[0] = digits[neg] - '0';
     for (i = 1; i < len; ++i)
     {
         int_mult_digit(x, b);
         int_add_digit(x, digits[i] - '0');
     }
+
+    if (neg)
+        x->count = -x->count;
 
     return (DfObject *)remove_leading_zeros(x);
 }
