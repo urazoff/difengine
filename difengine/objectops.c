@@ -14,6 +14,16 @@ df_num_negative(DfObject *a)
 }
 
 DfObject*
+df_num_abs(DfObject *a)
+{
+    if (a->type->as_numeric != NULL && a->type->as_numeric->abs != NULL)
+        return (*a->type->as_numeric->abs)(a);
+
+    /* TODO: Handle error */
+    return NULL;
+}
+
+DfObject*
 df_num_add(DfObject *a, DfObject *b)
 {
     /* TODO: type checks must be more complex

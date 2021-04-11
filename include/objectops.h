@@ -22,6 +22,14 @@ extern "C" {
 extern DfObject* df_num_negative(DfObject *a);
 
 /**
+ * Get absolute value of a numeric object
+ *
+ * @return
+ *   numeric object containing result
+ */
+extern DfObject* df_num_abs(DfObject *a);
+
+/**
  * Add two objects of numeric type.
  *
  * @return
