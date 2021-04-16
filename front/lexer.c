@@ -354,6 +354,10 @@ df_lexer_get(DfLexer *lexer, const char **start, const char **end)
             } while (is_digit(c));
         }
 
+        /* Imaginary number */
+        if (c == 'i')
+            df_lexer_nextc(lexer);
+
         df_lexer_back(lexer);
         *start = lexer->start;
         *end = lexer->cur;
