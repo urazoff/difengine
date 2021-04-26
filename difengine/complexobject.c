@@ -112,7 +112,7 @@ complex_print(DfObject *a)
     if (x->real == 0.0)
         printf("%lfi", x->im);
     else
-        printf("%lf + %lfi", x->real, x->im);
+        printf("%lf%+lfi", x->real, x->im);
 
     return 0;
 }
