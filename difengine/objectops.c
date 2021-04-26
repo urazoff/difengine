@@ -61,3 +61,16 @@ df_num_multiply(DfObject *a, DfObject *b)
     /* TODO: Handle error */
     return NULL;
 }
+
+DfObject*
+df_num_divide(DfObject *a, DfObject *b)
+{
+    /* TODO: type checks must be more complex
+     * to operate args of different types */
+    if (a->type->as_numeric != NULL && a->type->as_numeric->div != NULL &&
+        a->type == b->type)
+        return (*a->type->as_numeric->div)(a, b);
+
+    /* TODO: Handle error */
+    return NULL;
+}
