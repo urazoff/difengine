@@ -54,6 +54,7 @@ typedef struct syntax_tree {
     int type;
     char *value;
     int degree;
+    int line;
     struct syntax_tree **children;
 } DfTree;
 
@@ -63,7 +64,7 @@ typedef struct syntax_tree {
  * @return
  *   new AST node
  */
-extern DfTree* df_ast_new_node(int type, const char *value);
+extern DfTree* df_ast_new_node(int type, const char *value, int line);
 
 /**
  * Add AST child.

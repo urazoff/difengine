@@ -2,6 +2,8 @@
 #include "memory.h"
 #include "dferror.h"
 
+#define LINENO parser->tok_prev->line
+
 static void
 df_parser_error(DfParser *parser, DfToken *token, const char *err_msg,
                 ...)
@@ -174,7 +176,7 @@ df_parser_precedence(DfParser *parser, int precedence)
         func infix = df_parser_get_rule(parser->tok_prev->type)->infix;
         node_type = df_parser_get_rule(parser->tok_prev->type)->node_type;
         node = infix(parser);
-        DfTree *y = df_ast_new_node(node_type, NULL);
+        DfTree *y = df_ast_new_node(node_type, NULL, LINENO);
         y = df_ast_add_child(y, x);
         x = df_ast_add_child(y, node);
     }
@@ -193,7 +195,7 @@ unary_rule(DfParser *parser)
     node = df_parser_precedence(parser, P_UNARY);
     node_type = df_parser_get_rule(type)->node_type;
 
-    x = df_ast_new_node(node_type, NULL);
+    x = df_ast_new_node(node_type, NULL, LINENO);
     x = df_ast_add_child(x, node);
 
     return x;
@@ -234,7 +236,7 @@ atomic_rule(DfParser *parser)
     value = DF_MEM_ALLOC((parser->tok_prev->length + 1) * sizeof(char));
     strncpy(value, parser->tok_prev->start, parser->tok_prev->length);
     value[parser->tok_prev->length] = '\0';
-    x = df_ast_new_node(node_type, value);
+    x = df_ast_new_node(node_type, value, LINENO);
 
     return x;
 }
@@ -245,7 +247,7 @@ call_rule(DfParser *parser)
     DfTree *x = NULL;
     DfTree *arg = NULL;
 
-    x = df_ast_new_node(N_SEQUENCE, NULL);
+    x = df_ast_new_node(N_SEQUENCE, NULL, LINENO);
 
     if (parser->tok_cur->type != RPAREN)
     {
@@ -268,7 +270,7 @@ list_rule(DfParser *parser)
     DfTree *x = NULL;
     DfTree *item = NULL;
 
-    x = df_ast_new_node(N_LIST, NULL);
+    x = df_ast_new_node(N_LIST, NULL, LINENO);
 
     if (parser->tok_cur->type != RBRACKET)
     {
@@ -292,7 +294,7 @@ hash_rule(DfParser *parser)
     DfTree *key = NULL;
     DfTree *value = NULL;
 
-    x = df_ast_new_node(N_HASH, NULL);
+    x = df_ast_new_node(N_HASH, NULL, LINENO);
 
     if (parser->tok_cur->type != RBRACE)
     {
@@ -347,7 +349,7 @@ df_parser_stmt_block(DfParser *parser)
     DfTree *x = NULL;
     DfTree *s = NULL;
 
-    x = df_ast_new_node(N_SEQUENCE, NULL);
+    x = df_ast_new_node(N_SEQUENCE, NULL, LINENO);
     df_parser_proceed(parser);
     while (parser->tok_cur->type != TENDOF && parser->tok_cur->type != RBRACE)
     {
@@ -384,14 +386,14 @@ df_parser_stmt(DfParser *parser)
         case K_IF:
             PARSE_CONDITION("IF");
             s = df_parser_stmt(parser);
-            x = df_ast_add_child(df_ast_new_node(N_IF, NULL), e);
+            x = df_ast_add_child(df_ast_new_node(N_IF, NULL, LINENO), e);
             x = df_ast_add_child(x, s);
 
             while (parser->tok_cur->type == K_ELIF)
             {
                 PARSE_CONDITION("ELIF");
                 s = df_parser_stmt(parser);
-                y = df_ast_add_child(df_ast_new_node(N_IF, NULL), e);
+                y = df_ast_add_child(df_ast_new_node(N_IF, NULL, LINENO), e);
                 y = df_ast_add_child(y, s);
                 x = df_ast_add_child(x, y);
             }
@@ -412,7 +414,7 @@ df_parser_stmt(DfParser *parser)
                                 "IDENTIFIER after FOR keyword");
             df_parser_expect(parser, K_IN, "IN in FOR statement");
             y = df_parser_precedence(parser, P_ASSIGNMENT);
-            x = df_ast_add_child(df_ast_new_node(N_FOR, NULL), e);
+            x = df_ast_add_child(df_ast_new_node(N_FOR, NULL, LINENO), e);
             x = df_ast_add_child(x, y);
             s = df_parser_stmt(parser);
             x = df_ast_add_child(x, s);
@@ -421,13 +423,13 @@ df_parser_stmt(DfParser *parser)
         case K_WHILE:
             PARSE_CONDITION("WHILE");
             s = df_parser_stmt(parser);
-            x = df_ast_add_child(df_ast_new_node(N_WHILE, NULL), e);
+            x = df_ast_add_child(df_ast_new_node(N_WHILE, NULL, LINENO), e);
             x = df_ast_add_child(x, s);
             break;
 
         case K_RETURN:
             df_parser_proceed(parser);
-            x = df_ast_new_node(N_RETURN, NULL);
+            x = df_ast_new_node(N_RETURN, NULL, LINENO);
             if (parser->tok_cur->type == SEMICOLON)
             {
                 df_parser_proceed(parser);
@@ -458,7 +460,7 @@ df_parser_decl_block(DfParser *parser)
     DfTree *x = NULL;
     DfTree *d = NULL;
 
-    x = df_ast_new_node(N_SEQUENCE, NULL);
+    x = df_ast_new_node(N_SEQUENCE, NULL, LINENO);
     while (parser->tok_cur->type != TENDOF && parser->tok_cur->type != RBRACE)
     {
         d = df_parser_decl(parser);
@@ -487,7 +489,7 @@ df_parser_decl(DfParser *parser)
             if (e->type != N_CALL)
                 df_parser_expect(parser, -1,
                                 "'<name>(<args>)' after DEF keyword");
-            x = df_ast_add_child(df_ast_new_node(N_DEF, NULL), e);
+            x = df_ast_add_child(df_ast_new_node(N_DEF, NULL, LINENO), e);
             df_parser_expect(parser, LBRACE,
                                 "'{' in function declaration");
             d = df_parser_decl_block(parser);
@@ -506,7 +508,7 @@ df_parser_parse(DfParser *parser)
 {
     DfTree *x = NULL;
 
-    x = df_ast_new_node(N_SEQUENCE, NULL);
+    x = df_ast_new_node(N_SEQUENCE, NULL, 0);
 
     for (df_parser_proceed(parser); parser->tok_cur->type != TENDOF; )
         x = df_ast_add_child(x, df_parser_decl(parser));

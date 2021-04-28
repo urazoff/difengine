@@ -40,7 +40,7 @@ const char * const NodeTypes[] = {
 };
 
 DfTree*
-df_ast_new_node(int type, const char *value)
+df_ast_new_node(int type, const char *value, int line)
 {
     DfTree *t = DF_MEM_ALLOC(sizeof(DfTree));
     if (t == NULL)
@@ -50,6 +50,7 @@ df_ast_new_node(int type, const char *value)
     t->children = NULL;
     t->degree = 0;
     t->value = (char *)value;
+    t->line = line;
 
     return t;
 }
