@@ -60,6 +60,7 @@ typedef struct
     binaryop sub;
     binaryop mul;
     binaryop div;
+    binaryop pow;
 } DfNumOps;
 
 typedef struct

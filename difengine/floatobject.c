@@ -1,3 +1,4 @@
+#include <math.h>
 #include "floatobject.h"
 #include "defines.h"
 #include "memory.h"
@@ -80,6 +81,78 @@ float_divide(DfObject *a, DfObject *b)
     return df_float_obj_init(x / y);
 }
 
+/* a^b */
+static DfObject*
+float_pow(DfObject *a, DfObject *b)
+{
+    double x = ((DfFloatObj *)a)->val;
+    double y = ((DfFloatObj *)b)->val;
+    long iy = (long)y;
+    long exp;
+    double r;
+
+    /* x^0 */
+    if (y == 0)
+    {
+        if (x == 0)
+            /* 0^0 undefined */
+            return NULL;
+
+        r = 1.0;
+        return df_float_obj_init(r);
+    }
+
+    /* 0^y */
+    if (x == 0)
+    {
+        if (y < 0)
+            /* 0^y undefined for y < 0 */
+            return NULL;
+
+        r = 0.0;
+        return df_float_obj_init(r);
+    }
+
+    /* 1^y or x^1 */
+    if (x == 1.0 || y == 1.0)
+    {
+        r = x;
+        return df_float_obj_init(r);
+    }
+
+    /* integer power:
+     * y = 2^b_1 + ... + 2^b_k => x^y = x^(2^b_1) * ... * x^(2^b_k)
+     */
+    if (y == iy)
+    {
+        r = 1.0;
+        if (iy < 0)
+            exp = -iy;
+        else
+            exp = iy;
+
+        while (exp > 0)
+        {
+            if (exp & 1)
+                r *= x;
+            x *= x;
+            exp >>= 1;
+        }
+
+        if (iy < 0)
+            r = 1.0 / r;
+
+        return df_float_obj_init(r);
+    }
+
+    if (x < 0)
+        /* negative number in float power must be done using DfComplexObj */
+        return NULL;
+
+    r = pow(x, y);
+    return df_float_obj_init(r);
+}
+
 static int
 float_print(DfObject *a)
 {
@@ -110,6 +183,7 @@ static DfNumOps as_numeric = {
     (binaryop)float_sub,
     (binaryop)float_multiply,
     (binaryop)float_divide,
+    (binaryop)float_pow
 };
 
 DfType DfFloatType = {

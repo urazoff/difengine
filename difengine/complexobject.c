@@ -140,6 +140,7 @@ static DfNumOps as_numeric = {
     (binaryop)complex_sub,
     (binaryop)complex_multiply,
     (binaryop)complex_divide,
+    NULL
 };
 
 DfType DfComplexType = {
