@@ -335,6 +335,52 @@ int_copy(DfIntObj *x)
     return z;
 }
 
+/* a^b */
+static DfObject*
+int_pow(DfObject *a, DfObject *b)
+{
+    DfIntObj *x = (DfIntObj *)a;
+    DfIntObj *y = (DfIntObj *)b;
+    df_digit d;
+    int size_y;
+    int i;
+    int j;
+    DfObject *r = df_int_obj_init(1);
+    ((DfIntObj *)r)->digits[0] = 1;
+    DfObject *tmp = (DfObject *)int_copy(x);
+    DfObject *tmp_f;
+
+    if (y->count < 0)
+        /* int in negative power must be done using DfFloatObj */
+        return NULL;
+
+    size_y = DF_ABS(y->count);
+    for (i = 0; i < size_y; ++i)
+    {
+        d = y->digits[i];
+
+        for (j = 0; j < DF_INT_DIGIT_SIZE; ++j)
+        {
+            if (d & 1)
+            {
+                tmp_f = r;
+                r = int_multiply(r, tmp);
+                df_obj_destroy(tmp_f);
+            }
+
+            d >>= 1;
+            if (d == 0 && i + 1 == size_y)
+                break;
+            tmp_f = tmp;
+            tmp = int_multiply(tmp, tmp);
+            df_obj_destroy(tmp_f);
+        }
+    }
+
+    df_obj_destroy((DfObject *)tmp);
+    return (DfObject *)r;
+}
+
 static DfObject*
 int_abs(DfObject *a)
 {
@@ -578,7 +624,7 @@ static DfNumOps as_numeric = {
     (binaryop)int_sub,
     (binaryop)int_multiply,
     NULL,
-    NULL
+    (binaryop)int_pow
 };
 
 static DfContOps as_container = {
