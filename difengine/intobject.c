@@ -50,7 +50,12 @@ remove_leading_zeros(DfIntObj *a)
     for (i = size; (i > 0) && (a->digits[i - 1] == 0); --i);
 
     if (i != size)
+    {
+        if (i == 0)
+            i = 1;
+
         a->count = (a->count >= 0) ? i : -i;
+    }
 
     return a;
 }
@@ -478,6 +483,9 @@ int_to_decimal_str(DfIntObj *x)
     df_digit *to_free = dec;
     if (dec == NULL)
         return NULL;
+
+    if (is_zero(tmp))
+        count = 1;
 
     for (k = 0; !is_zero(tmp); )
     {
