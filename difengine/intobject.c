@@ -431,7 +431,7 @@ df_int_from_str(char *digits)
 
     /* Just evaluate the number */
     x->digits[0] = digits[neg] - '0';
-    for (i = 1; i < len; ++i)
+    for (i = neg + 1; i < len; ++i)
     {
         int_mult_digit(x, b);
         int_add_digit(x, digits[i] - '0');
