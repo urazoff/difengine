@@ -1,4 +1,3 @@
-/* for hypot() */
 #include <math.h>
 #include "complexobject.h"
 #include "floatobject.h"
@@ -103,6 +102,61 @@ complex_divide(DfObject *a, DfObject *b)
                                (x->im * y->real - x->real * y->im)/r2);
 }
 
+/* a^b */
+static DfObject*
+complex_pow(DfObject *a, DfObject *b)
+{
+    DfComplexObj *x = (DfComplexObj *)a;
+    DfComplexObj *y = (DfComplexObj *)b;
+    DfComplexObj *r = (DfComplexObj *)df_complex_obj_init(0, 0);
+    double hp_x;
+    double arg_x;
+    double rad;
+    double phi;
+
+    /* x^0 */
+    if (y->real == 0.0 && y->im == 0.0)
+    {
+        if (x->real == 0.0 && x->im == 0.0)
+            /* 0^0 undefined */
+            return NULL;
+
+        r->real = 1;
+        r->im = 0;
+        return (DfObject *)r;
+    }
+
+    /* 0^y */
+    if (x->real == 0.0 && x->im == 0.0)
+    {
+        if (y->real == 0.0 && y->im == 0.0)
+            /* 0^0 undefined */
+            return NULL;
+
+        r->real = 0;
+        r->im = 0;
+        return (DfObject *)r;
+    }
+
+    /* 1^y or x^1 */
+    if ( (x->real == 1 && x->im == 0) || (y->real == 1 && y->im == 0))
+    {
+        r->real = x->real;
+        r->im = x->im;
+        return (DfObject *)r;
+    }
+
+    /* Calculate the principal branch of complex ln */
+    hp_x = hypot(x->real, x->im);
+    arg_x = atan2(x->im, x->real);
+    rad = pow(hp_x, y->real) / exp(y->im * arg_x);
+    phi = y->real * arg_x + y->im * log(hp_x);
+
+    r->real = rad * cos(phi);
+    r->im = rad * sin(phi);
+    return (DfObject *)r;
+}
+
 static int
 complex_print(DfObject *a)
 {
@@ -140,7 +194,7 @@ static DfNumOps as_numeric = {
     (binaryop)complex_sub,
     (binaryop)complex_multiply,
     (binaryop)complex_divide,
-    NULL
+    (binaryop)complex_pow
 };
 
 DfType DfComplexType = {
