@@ -70,7 +70,7 @@ df_hash_obj_init()
     /* Initialize bogus key */
     if (bogus == NULL)
     {
-        bogus = (DfObject *)df_str_obj_from_str("bogus");
+        bogus = df_str_obj_from_str("bogus");
         if (bogus == NULL)
             return NULL;
     }

@@ -8,14 +8,14 @@ int main(int argc, char *argv[])
 {
     int ret_val;
     DfObject *ret_p;
-    DfStrObj *str1 = df_str_obj_from_str("string #1");
-    DfStrObj *str2 = df_str_obj_from_str("string #2");
+    DfObject *str1 = df_str_obj_from_str("string #1");
+    DfObject *str2 = df_str_obj_from_str("string #2");
     DfObject *x = df_int_from_str("53923543891348405834500421932457932476387");
     DfObject *y = df_int_from_str("95892348909345987134092364758391002349874");
     DfObject *ht = df_hash_obj_init();
 
-    ret_p = df_hash_obj_insert(ht, (DfObject *)str1, y);
-    ret_p = df_hash_obj_insert(ht, x, (DfObject *)str2);
+    ret_p = df_hash_obj_insert(ht, str1, y);
+    ret_p = df_hash_obj_insert(ht, x, str2);
     ret_val = df_obj_print(ht, 1);
 
     ret_p = df_hash_obj_get(ht, x);

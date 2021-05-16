@@ -28,7 +28,7 @@ extern DfType DfStrType;
  * @return
  *   string object
  */
-DfStrObj* df_str_obj_from_str(char *chars);
+DfObject* df_str_obj_from_str(char *chars);
 
 #ifdef __cplusplus
 }

@@ -26,7 +26,7 @@ str_hash(DfStrObj *str)
     return hash;
 }
 
-DfStrObj*
+DfObject*
 df_str_obj_from_str(char *chars)
 {
     int ret_val;
@@ -47,7 +47,7 @@ df_str_obj_from_str(char *chars)
     ret_val = str_hash(str);
     UNUSED(ret_val);
 
-    return str;
+    return (DfObject *)str;
 }
 
 /* Let's keep it simple for now */
