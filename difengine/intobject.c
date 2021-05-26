@@ -624,6 +624,7 @@ static DfNumOps as_numeric = {
     (binaryop)int_sub,
     (binaryop)int_multiply,
     NULL,
+    NULL,
     (binaryop)int_pow
 };
 

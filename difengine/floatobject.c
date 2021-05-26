@@ -81,6 +81,22 @@ float_divide(DfObject *a, DfObject *b)
     return df_float_obj_init(x / y);
 }
 
+/* modulo operation */
+static DfObject*
+float_mod(DfObject *a, DfObject *b)
+{
+    double x = ((DfFloatObj *)a)->val;
+    double y = ((DfFloatObj *)b)->val;
+    double mod;
+
+    /* TODO: handle the error */
+    if (y == 0)
+        return NULL;
+
+    mod = fmod(x, y);
+    return df_float_obj_init(mod);
+}
+
 /* a^b */
 static DfObject*
 float_pow(DfObject *a, DfObject *b)
@@ -183,6 +199,7 @@ static DfNumOps as_numeric = {
     (binaryop)float_sub,
     (binaryop)float_multiply,
     (binaryop)float_divide,
+    (binaryop)float_mod,
     (binaryop)float_pow
 };
 
