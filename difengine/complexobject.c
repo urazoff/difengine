@@ -102,6 +102,28 @@ complex_divide(DfObject *a, DfObject *b)
                                (x->im * y->real - x->real * y->im)/r2);
 }
 
+static DfObject*
+complex_mod(DfObject *a, DfObject *b)
+{
+    DfComplexObj *q = NULL;
+    DfObject *mod = NULL;
+    DfObject *term = NULL;
+
+    q = (DfComplexObj *)complex_divide(a, b);
+    if (q == NULL)
+        return NULL;
+
+    q->real = floor(q->real);
+    q->im = floor(q->im);
+
+    term = complex_multiply(b, (DfObject *)q);
+    mod = complex_sub(a, term);
+
+    df_obj_destroy((DfObject *)q);
+    df_obj_destroy(term);
+    return mod;
+}
+
 /* a^b */
 static DfObject*
 complex_pow(DfObject *a, DfObject *b)
@@ -194,7 +216,7 @@ static DfNumOps as_numeric = {
     (binaryop)complex_sub,
     (binaryop)complex_multiply,
     (binaryop)complex_divide,
-    NULL,
+    (binaryop)complex_mod,
     (binaryop)complex_pow
 };
 
