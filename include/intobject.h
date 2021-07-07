@@ -16,11 +16,13 @@ extern "C" {
 #if DF_WSIZE == 64
 typedef uint32_t df_digit;
 typedef uint64_t df_word;
+typedef int64_t df_sword;
 #define DF_INT_BITS 30
 #define DF_INT_DIGIT_SIZE 32
 #elif DF_WSIZE == 32
 typedef uint16_t df_digit;
 typedef uint32_t df_word;
+typedef int32_t df_sword;
 #define DF_INT_BITS 15
 #define DF_INT_DIGIT_SIZE 16
 #endif

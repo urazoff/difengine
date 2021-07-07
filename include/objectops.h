@@ -62,7 +62,15 @@ extern DfObject* df_num_multiply(DfObject *a, DfObject *b);
 extern DfObject* df_num_divide(DfObject *a, DfObject *b);
 
 /**
- * Divide two objects of numeric type.
+ * Modulo operation.
+ *
+ * @return
+ *   new numeric object containing result
+ */
+extern DfObject* df_num_mod(DfObject *a, DfObject *b);
+
+/**
+ * Raise a to the power of b.
  *
  * @return
  *   new numeric object containing result

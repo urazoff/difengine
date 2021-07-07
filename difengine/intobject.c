@@ -430,6 +430,212 @@ int_mult_digit(DfIntObj *a, df_digit b)
     a->digits[i] = c;
 }
 
+static void int_destroy(DfObject *a);
+static void int_div_digit(DfIntObj *x, df_digit b, df_digit *mod);
+
+/* Knuth V. 2 Chapter 4.3.1 Algorithm D.
+ * Returns quotient and writes remainder as r.
+ * */
+static DfIntObj*
+int_div_s(DfIntObj *a, DfIntObj *b, DfIntObj **r, int remainder)
+{
+    DfIntObj *x = NULL;
+    DfIntObj *y = NULL;
+    DfIntObj *q = NULL;
+    DfIntObj *tmp = NULL;
+    df_word p;
+    df_word w;
+    df_word rh;
+    df_digit d;
+    df_digit qh;
+    df_digit yn;
+    df_sword k;
+    df_sword t;
+    int size_x;
+    int size_y;
+    int j;
+    int i;
+
+    size_x = DF_ABS(a->count);
+
+    /* Allocate more space for x to have one more digit */
+    x = (DfIntObj *)df_int_obj_init(size_x + 1);
+
+    for (i = 0; i < size_x; ++i)
+        x->digits[i] = a->digits[i];
+
+    x->digits[size_x] = 0;
+
+    y = int_copy(b);
+    size_y = DF_ABS(y->count);
+
+    q = (DfIntObj *)df_int_obj_init(size_x - size_y + 1);
+
+    /* Step 1. Normalize. */
+    /* d = DF_INT_MASK / b->digits[size_y - 1]; */
+    d = (DF_INT_BASE / 2) / b->digits[size_y - 1] + 1;
+    int_mult_digit(x, d);
+    int_mult_digit(y, d);
+
+    /* Step 3 (initializaitons is Step 2). Main loop. */
+    yn = y->digits[size_y - 1];
+
+    assert(yn > DF_INT_BASE / 2);
+
+    for (j = size_x; j >= size_y; --j)
+    {
+        w = (df_word)x->digits[j] << (df_word)DF_INT_BITS;
+        w |= (df_word)x->digits[j - 1];
+        rh = w % (df_word)yn;
+        w /= (df_word)yn;
+        qh = (df_digit)(w & (df_word)DF_INT_MASK);
+
+again:
+        /* Subloop in Step 3. */
+        if (qh >= DF_INT_BASE ||
+            (df_word)qh*(df_word)y->digits[size_y - 2] >
+            DF_INT_BASE*rh + x->digits[j - 2])
+        {
+            qh -= 1;
+            rh += yn;
+
+            if (rh < DF_INT_BASE)
+                goto again;
+        }
+
+        /* Step 4. Multiply and subtract. */
+        k = 0;
+        for (i = 0; i < size_y; ++i)
+        {
+            p = (df_word)qh*(df_word)y->digits[i];
+            t = x->digits[i + j - size_y] - k - (p & (df_word)DF_INT_MASK);
+            x->digits[i + j - size_y] = (df_digit)(t & (df_word)DF_INT_MASK);
+            k = (p >> (df_word)DF_INT_BITS) - (t >> (df_word)DF_INT_BITS);
+        }
+        t = x->digits[j] - k;
+        x->digits[j] = (df_digit)(t & (df_word)DF_INT_MASK);
+
+        /* Step 5. */
+        q->digits[j - size_y] = qh;
+        if (t < 0)
+        {
+            /* Step 6. */
+            q->digits[j - size_y] -= 1;
+            k = 0;
+            for (i = 0; i < size_y; ++i)
+            {
+                t = x->digits[i + j - size_y] + y->digits[i] + k;
+                x->digits[i + j - size_y] =
+                    (df_digit)(t & (df_word)DF_INT_MASK);
+                k = t >> DF_INT_BITS;
+            }
+            x->digits[j] += (df_digit)k;
+        }
+
+        /* Step 7. */
+    }
+    /* Step 8. We want the remainder. Unnormalize it. */
+    if (remainder)
+    {
+        tmp = (DfIntObj *)df_int_obj_init(size_y);
+        for (i = 0; i < size_y; ++i)
+            tmp->digits[i] = x->digits[i];
+
+        int_div_digit(tmp, d, &p);
+
+        *r = tmp;
+    }
+
+    int_destroy((DfObject *)x);
+    int_destroy((DfObject *)y);
+    return q;
+}
+
+static DfObject*
+int_mod(DfObject *a, DfObject *b)
+{
+    DfIntObj *x = (DfIntObj *)a;
+    DfIntObj *y = (DfIntObj *)b;
+    DfIntObj *tmp = NULL;
+    DfIntObj *q = NULL;
+    DfIntObj *r = NULL;
+    df_digit mod;
+    int size_x;
+    int size_y;
+
+    size_x = DF_ABS(x->count);
+    size_y = DF_ABS(y->count);
+
+    if (size_y == 0)
+        return NULL;
+
+    if (size_x < size_y)
+    {
+        DF_INC_RF(a);
+        return a;
+    }
+
+    if (size_y == 1)
+    {
+        if (y->digits[0] == 0)
+            return NULL;
+
+        tmp = int_copy(x);
+        int_div_digit(tmp, y->digits[0], &mod);
+        r = (DfIntObj *)df_int_obj_init(1);
+        r->digits[0] = mod;
+        int_destroy((DfObject *)tmp);
+    }
+    else
+    {
+        q = int_div_s(x, y, &r, 1);
+        int_destroy((DfObject *)q);
+    }
+
+    if (x->count < 0)
+        r->count = -r->count;
+
+    return (DfObject *)remove_leading_zeros(r);
+}
+
+static DfObject*
+int_div(DfObject *a, DfObject *b)
+{
+    DfIntObj *x = (DfIntObj *)a;
+    DfIntObj *y = (DfIntObj *)b;
+    DfIntObj *q = NULL;
+    df_digit mod;
+    int size_x;
+    int size_y;
+
+    size_x = DF_ABS(x->count);
+    size_y = DF_ABS(y->count);
+
+    if (size_y == 0)
+        return NULL;
+
+    if (size_x < size_y)
+        return df_int_obj_init(0);
+
+    if (size_y == 1)
+    {
+        if (y->digits[0] == 0)
+            return NULL;
+
+        q = int_copy(x);
+        int_div_digit(q, y->digits[0], &mod);
+    }
+    else
+    {
+        q = int_div_s(x, y, NULL, 0);
+    }
+
+    if ((x->count < 0) != (y->count < 0))
+        q->count = -q->count;
+
+    return (DfObject *)remove_leading_zeros(q);
+}
+
 /* bignum div digit, bignum mod digit */
 static void
 int_div_digit(DfIntObj *x, df_digit b, df_digit *mod)
@@ -623,8 +829,8 @@ static DfNumOps as_numeric = {
     (binaryop)int_add,
     (binaryop)int_sub,
     (binaryop)int_multiply,
-    NULL,
-    NULL,
+    (binaryop)int_div,
+    (binaryop)int_mod,
     (binaryop)int_pow
 };
 
