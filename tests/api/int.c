@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     DfObject *y;
     DfObject *z;
     DfObject *s;
+    DfObject *q;
     int cmp;
 
     printf("a = ");
@@ -33,6 +34,11 @@ int main(int argc, char *argv[])
     df_obj_print(m, 0);
     printf(";\n");
 
+    printf("a div b = ");
+    q = df_num_divmod(a, b);
+    df_obj_print(q, 0);
+    printf(";\n");
+
     printf("a * b = ");
     y = df_num_multiply(a, b);
     df_obj_print(y, 0);
@@ -53,6 +59,8 @@ int main(int argc, char *argv[])
     df_obj_destroy(y);
     df_obj_destroy(z);
     df_obj_destroy(s);
+    df_obj_destroy(m);
+    df_obj_destroy(q);
     printf("\nRES: Success\n");
 
     return 0;

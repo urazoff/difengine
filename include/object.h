@@ -61,6 +61,7 @@ typedef struct
     binaryop mul;
     binaryop div;
     binaryop mod;
+    binaryop divmod;
     binaryop pow;
 } DfNumOps;
 

@@ -89,6 +89,19 @@ df_num_mod(DfObject *a, DfObject *b)
 }
 
 DfObject*
+df_num_divmod(DfObject *a, DfObject *b)
+{
+    /* TODO: type checks must be more complex
+     * to operate args of different types */
+    if (a->type->as_numeric != NULL && a->type->as_numeric->divmod != NULL &&
+        a->type == b->type)
+        return (*a->type->as_numeric->divmod)(a, b);
+
+    /* TODO: Handle error */
+    return NULL;
+}
+
+DfObject*
 df_num_pow(DfObject *a, DfObject *b)
 {
     /* TODO: type checks must be more complex

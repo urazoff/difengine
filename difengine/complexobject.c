@@ -217,6 +217,7 @@ static DfNumOps as_numeric = {
     (binaryop)complex_multiply,
     (binaryop)complex_divide,
     (binaryop)complex_mod,
+    NULL,
     (binaryop)complex_pow
 };
 

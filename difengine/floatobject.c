@@ -200,6 +200,7 @@ static DfNumOps as_numeric = {
     (binaryop)float_multiply,
     (binaryop)float_divide,
     (binaryop)float_mod,
+    NULL,
     (binaryop)float_pow
 };
 

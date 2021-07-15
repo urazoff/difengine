@@ -70,6 +70,14 @@ extern DfObject* df_num_divide(DfObject *a, DfObject *b);
 extern DfObject* df_num_mod(DfObject *a, DfObject *b);
 
 /**
+ * Get quotient a//b.
+ *
+ * @return
+ *   new numeric object containing result
+ */
+extern DfObject* df_num_divmod(DfObject *a, DfObject *b);
+
+/**
  * Raise a to the power of b.
  *
  * @return
