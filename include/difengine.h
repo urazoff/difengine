@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <errno.h>
+#include <assert.h>
 
 #define DF_DEBUG
 
